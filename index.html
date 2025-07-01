@@ -2,37 +2,802 @@
 <html lang="en">
 
 <head>
-  <title>devfolio</title>
+  <title>Manish Kumar</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" href="favicon.png" type="image/x-icon">
+  <link rel="icon" href="/img/sun.png" type="image/x-icon">
   <link rel="stylesheet" href="css/main.bundle.css">
   <script src="https://kit.fontawesome.com/4e5a72c756.js"></script>
+  <style>
+    :root {
+      /* Primary theme colors */
+      --color-primary: #202a28;
+      /* Primary brand color */
+      --color-primary-dark: #00a08c;
+      /* Darker shade for hover states */
+      --color-primary-light: #ebfffc;
+      /* Lighter shade for backgrounds */
+
+      /* Accent colors */
+      --color-accent: #3273dc;
+      /* Accent color for links and buttons */
+      --color-accent-dark: #2160c4;
+      /* Darker accent for hover states */
+      --color-accent-light: #eef3fc;
+      /* Lighter accent for backgrounds */
+
+      /* UI colors */
+      --color-background: #ffffff;
+      /* Main background color */
+      --color-text: #4a4a4a;
+      /* Main text color */
+      --color-text-light: #7a7a7a;
+      /* Secondary text color */
+      --color-text-medium: #5a5a5a;
+      /* Medium text color for toggle button */
+      --color-border: #dbdbdb;
+      /* Border color */
+      --color-border-lighter: #e8e8e8;
+      /* Lighter border color for subtle elements */
+      --color-danger: #ff3860;
+      /* Danger/error color (used for chat button) */
+      --color-success: #48c774;
+      /* Success color (used for notifications) */
+      --color-warning: #ffdd57;
+      /* Warning color (used for notifications) */
+
+      /* Shadow color */
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      /* Color for shadows */
+    }
+
+    body {
+      padding-top: 3.25rem;
+      /* Add padding to prevent content from being hidden under the fixed navbar */
+      color: var(--color-text);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      /* For smooth scrolling when clicking on navigation links */
+    }
+
+    /* Use our accent color for links */
+    a {
+      color: var(--color-accent);
+    }
+
+    a:hover {
+      color: var(--color-accent-dark);
+    }
+
+    .navbar-item.is-active {
+      background-color: rgba(255, 255, 255, 0.2) !important;
+      font-weight: bold;
+    }
+
+    /* Override Bulma's primary color to use our CSS variables */
+    .navbar.is-primary {
+      background-color: var(--color-primary);
+    }
+
+    .navbar.is-primary .navbar-brand>a.navbar-item:hover,
+    .navbar.is-primary .navbar-brand>a.navbar-item.is-active {
+      background-color: var(--color-primary-dark);
+    }
+
+    .button.is-primary {
+      background-color: var(--color-primary);
+    }
+
+    .button.is-primary:hover {
+      background-color: var(--color-primary-dark);
+    }
+
+    .hero.is-primary {
+      background-color: var(--color-primary);
+    }
+
+    .section {
+      padding-top: 4rem;
+      /* Additional padding for sections to account for navbar */
+      margin-top: -4rem;
+      /* Negative margin to offset the anchor position */
+      padding-bottom: 3rem;
+      margin-bottom: 0rem;
+    }
+
+    .chat-container {
+      background-color: #f9f9f9;
+    }
+
+    .message {
+      margin-bottom: 10px;
+      clear: both;
+    }
+
+    .user-message .message-content {
+      background-color: var(--color-accent);
+      color: white;
+      float: right;
+      border-radius: 15px 15px 0 15px;
+      padding: 8px 15px;
+      max-width: 70%;
+    }
+
+    .bot-message .message-content {
+      background-color: var(--color-border);
+      color: var(--color-text);
+      float: left;
+      border-radius: 15px 15px 15px 0;
+      padding: 8px 15px;
+      max-width: 70%;
+    }
+
+    /* Enhanced styling for formatted bot messages */
+    .bot-message .message-content ul {
+      margin-top: 5px;
+      margin-bottom: 5px;
+      padding-left: 20px;
+    }
+
+    .bot-message .message-content li {
+      margin-bottom: 3px;
+      line-height: 1.4;
+    }
+
+    .bot-message .message-content strong {
+      font-weight: 600;
+    }
+
+    .card-gap {
+      margin-top: 1.5rem;
+    }
+
+    /* Chat popup styles */
+    .chat-popup {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-button {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: var(--color-accent);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: 0 4px 12px var(--shadow-color);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      align-self: flex-end;
+      padding: 5px;
+    }
+
+    .chat-icon {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .chat-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .chat-button.active {
+      background-color: var(--color-danger);
+    }
+
+    .chat-window {
+      width: 350px;
+      height: 450px;
+      background: var(--color-background);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 5px 20px var(--shadow-color);
+      display: none;
+      flex-direction: column;
+      margin-bottom: 15px;
+      animation: slide-up 0.3s ease;
+    }
+
+    .chat-window.active {
+      display: flex;
+    }
+
+    .chat-header {
+      background-color: var(--color-primary);
+      color: white;
+      padding: 15px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-header .close-chat {
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 15px;
+    }
+
+    .chat-input-container {
+      padding: 10px;
+      border-top: 1px solid #eee;
+    }
+
+    .chat-notification {
+      position: absolute;
+      bottom: 70px;
+      right: 0;
+      background: var(--color-border);
+      padding: 10px 15px;
+      border-radius: 15px 15px 0 15px;
+      box-shadow: 0 4px 12px var(--shadow-color);
+      max-width: 250px;
+      animation: slide-in 0.3s ease;
+      display: none;
+      white-space: nowrap;
+      font-weight: 500;
+      color: var(--color-text);
+    }
+
+    .chat-notification:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 12px;
+      height: 12px;
+      background: var(--color-border);
+      border-radius: 0 0 0 15px;
+    }
+
+    .chat-notification.active {
+      display: block;
+    }
+
+    @keyframes slide-up {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slide-in {
+      0% {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 4px 12px var(--shadow-color);
+      }
+
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 6px 16px var(--shadow-color);
+      }
+
+      100% {
+        transform: scale(1);
+        box-shadow: 0 4px 12px var(--shadow-color);
+      }
+    }
+
+    .pulse {
+      animation: pulse 1s infinite;
+    }
+
+    /* Typing indicator */
+    .typing-indicator .message-content {
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 40px;
+    }
+
+    .typing-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--color-text);
+      margin: 0 2px;
+      opacity: 0.6;
+      animation: typing-dot 1s infinite ease-in-out;
+    }
+
+    .typing-dot:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    .typing-dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes typing-dot {
+
+      0%,
+      60%,
+      100% {
+        transform: translateY(0);
+      }
+
+      30% {
+        transform: translateY(-5px);
+      }
+    }
+
+    /* Skills section styling */
+    .skill-icons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .skill-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 90px;
+    }
+
+    .skill-item img {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      margin-bottom: 4px;
+      transition: transform 0.3s ease;
+    }
+
+    .skill-item img:hover {
+      transform: scale(1.1);
+    }
+
+    .skill-item span {
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    /* Card styling for skills section */
+    .card {
+      border-radius: 6px;
+      /* Slightly smaller radius */
+      box-shadow: 0 2px 4px var(--shadow-color);
+      /* Smaller shadow */
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      box-shadow: 0 4px 8px var(--shadow-color);
+      /* Smaller shadow on hover */
+      transform: translateY(-2px);
+    }
+
+    /* Two-column list styling (used in Education and can be reused elsewhere) */
+    .two-column-list {
+      margin-top: 0.5rem;
+      column-count: 2;
+      column-gap: 2rem;
+    }
+
+    .two-column-list li {
+      margin-bottom: 0.75rem;
+      break-inside: avoid;
+      /* Prevents items from breaking across columns */
+    }
+
+    /* For mobile screens */
+    @media screen and (max-width: 768px) {
+      .two-column-list {
+        column-count: 1;
+      }
+    }
+
+    .is-clickable {
+      cursor: pointer;
+    }
+
+    /* Shared card styles for Experience and Education sections */
+    .content-card {
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-left: 3px solid transparent;
+      position: relative;
+      /* For absolute positioning of toggle button */
+      padding-right: 40px;
+      /* Add space for the toggle button */
+    }
+
+    .content-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px var(--shadow-color);
+      border-left: 3px solid var(--color-accent);
+    }
+
+    .content-card .card-content {
+      padding: 0.7rem 1rem 1rem 1rem;
+      /* Reduced padding for more compact look */
+    }
+
+    .card-gap {
+      margin-top: 0.1rem;
+      /* Increased to account for toggle button overlap */
+    }
+
+    /* Collapsible details section */
+    .card-details {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.3s ease-out;
+      opacity: 0;
+      margin-top: 0;
+    }
+
+    .card-details.is-active {
+      max-height: 500px;
+      opacity: 1;
+      transition: max-height 0.5s ease-in, opacity 0.3s 0.2s ease-in;
+    }
+
+    /* Style for cards with active details */
+    .content-card:has(.card-details.is-active) {
+      border-left: 2px solid var(--color-accent);
+      /* Thinner accent border */
+      background-color: #fafafa;
+      /* Lighter background */
+    }
+
+    /* Fallback for browsers that don't support :has() */
+    .content-card.card-active {
+      border-left: 2px solid var(--color-accent);
+      /* Thinner accent border */
+      background-color: #fafafa;
+      /* Lighter background */
+    }
+
+    /* Toggle container positioning */
+    .toggle-container {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+    }
+
+    /* Toggle button for expanding/collapsing content */
+    .card-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      color: var(--color-text-light);
+      cursor: pointer;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+      background-color: var(--color-background);
+      border: 1px solid var(--color-background);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    }
+
+    .card-toggle:hover {
+      background-color: #f9f9f9;
+      color: var(--color-background);
+    }
+
+    .card-toggle .icon {
+      transition: transform 0.3s ease;
+      font-size: 0.85rem;
+    }
+
+    .media-content-flex {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.25rem;
+      /* Reduced spacing after title container */
+    }
+
+    .media-content-flex .title-container {
+      flex: 1;
+      min-width: 200px;
+      margin-right: 0.5rem;
+    }
+
+    /* Make media more compact */
+    .content-card .media {
+      margin-bottom: 0.2rem;
+      /* Further reduced for more compact look */
+    }
+
+    /* Make the card content more compact */
+    .content-card .card-content> :last-child {
+      margin-bottom: 0.1rem;
+      /* Small margin for toggle button position */
+    }
+
+    .card-toggle .icon {
+      margin-left: 0.25rem;
+      transition: transform 0.3s ease;
+      font-size: 0.65rem;
+      /* Even smaller icon */
+    }
+
+    .card-toggle.is-active {
+      color: var(--color-background);
+      background-color: var(--color-accent-light);
+      border-color: var(--color-background);
+    }
+
+    .card-toggle.is-active .icon {
+      transform: rotate(180deg);
+      color: var(--color-accent);
+    }
+
+    /* Tag styling */
+    .tag {
+      background-color: var(--color-accent-light);
+      color: var(--color-accent-dark);
+      border-radius: 4px;
+      margin-bottom: 0.25rem;
+      /* Reduced vertical space between tags */
+    }
+
+    .tag:hover {
+      background-color: var(--color-accent);
+      color: white;
+    }
+
+    /* Notification styling */
+    .notification {
+      background-color: var(--color-primary-light);
+    }
+
+    .notification.is-primary {
+      background-color: var(--color-primary);
+      color: white;
+    }
+
+    .notification.is-info {
+      background-color: var(--color-accent);
+      color: white;
+    }
+
+    .notification.is-success {
+      background-color: var(--color-success);
+      color: white;
+    }
+
+    .notification.is-warning {
+      background-color: var(--color-warning);
+      color: rgba(0, 0, 0, 0.7);
+    }
+
+    .notification.is-danger {
+      background-color: var(--color-danger);
+      color: white;
+    }
+
+    /* Make subtitles more compact */
+    .content-card .subtitle {
+      margin-bottom: 0.4rem;
+      /* Further reduced */
+      margin-top: -0.25rem;
+      /* Pull subtitle closer to title */
+      font-size: 0.9rem;
+      /* Slightly smaller font */
+    }
+
+    .paragraph {
+      margin-bottom: 1rem;
+      /* Reduced spacing between paragraphs */
+      font-size: 1.25rem;
+      /* Slightly smaller font */
+    }
+
+    /* Make the content sections more compact */
+    .card-details .content {
+      padding-top: 0.25rem;
+      padding-bottom: 0.25rem;
+    }
+
+    /* Adjust title size for more compact look */
+    .content-card .title.is-4 {
+      font-size: 1.3rem;
+      /* Slightly smaller than default */
+      margin-bottom: 0.2rem;
+    }
+
+    /* Make lists inside cards more compact */
+    .content-card .content ul {
+      margin-top: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .content-card .content ul li {
+      margin-bottom: 0.5rem;
+    }
+
+    /* Make tags container more compact */
+    .content-card .tags {
+      margin-top: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    /* Project link buttons (similar to card-toggle) */
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: var(--color-text-light);
+      white-space: nowrap;
+      cursor: pointer;
+      padding: 0.25rem 0.7rem;
+      margin-right: 0.6rem;
+      margin-top: 0.7rem;
+      border-radius: 12px;
+      transition: all 0.2s ease;
+      background-color: var(--color-background);
+      border: 1px solid var(--color-border-lighter);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+      text-decoration: none;
+    }
+
+    .project-link:hover {
+      background-color: #f9f9f9;
+      color: var(--color-text);
+    }
+
+    .project-link .icon {
+      margin-right: 0.3rem;
+      font-size: 0.8rem;
+    }
+
+    .project-links-container {
+      display: flex;
+      margin-top: 0.5rem;
+    }
+
+    /* Mobile skills section styling */
+    @media screen and (max-width: 768px) {
+      .mobile-only {
+        display: block !important;
+      }
+
+      .mobile-hidden {
+        display: none !important;
+      }
+
+      .skill-toggle {
+        background: transparent;
+        border: none;
+        color: var(--color-text-light);
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .skill-toggle:hover {
+        color: var(--color-accent);
+      }
+
+      .skill-toggle.is-active .icon {
+        transform: rotate(180deg);
+      }
+
+      .skill-icons-full.is-active {
+        display: flex !important;
+      }
+
+      .skill-icons-preview.is-hidden {
+        display: none !important;
+      }
+
+      .skill-toggle-container {
+        text-align: center;
+        width: 100%;
+        margin-top: 10px;
+      }
+    }
+
+    /* Desktop - show all skills and hide mobile controls */
+    @media screen and (min-width: 769px) {
+      .mobile-only {
+        display: none !important;
+      }
+
+      .mobile-hidden {
+        display: flex !important;
+      }
+
+      .skill-icons-preview {
+        display: none !important;
+      }
+
+      .skill-icons-full {
+        display: flex !important;
+      }
+    }
+  </style>
 </head>
 
 <body>
-  <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+  <nav class="navbar is-primary is-fixed-top" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <div class="navbar-item is-hidden-desktop">
-        <a href="https://github.com/mmacneil" class="icon is-large has-text-light">
-          <i class="fab fa-2x fa-github"></i>
-        </a>
-      </div>
-      <div class="navbar-item is-hidden-desktop">
-        <a href="https://fullstackmark.com" class="icon is-large has-text-light">
-          <i class="fas fa-2x fa-globe"></i>
-        </a>
-      </div>
+      <a class="navbar-item" href="#">
+        <strong>Portfolio</strong>
+      </a>
+
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
     </div>
-    <div class="navbar-menu">
+    <div id="navbarMenu" class="navbar-menu">
+      <div class="navbar-start">
+        <a class="navbar-item" href="#about">
+          About
+        </a>
+        <a class="navbar-item" href="#projects">
+          Projects
+        </a>
+        <a class="navbar-item" href="#skills">
+          Skills
+        </a>
+        <a class="navbar-item" href="#experience">
+          Experience
+        </a>
+        <a class="navbar-item" href="#education">
+          Education
+        </a>
+        <a class="navbar-item" href="#contact">
+          Contact
+        </a>
+      </div>
       <div class="navbar-end">
         <div class="navbar-item">
-          <a href="https://github.com/mmacneil" class="icon is-large has-text-light">
+          <a href="https://github.com/manish-kotra" class="icon is-large has-text-light">
             <i class="fab fa-2x fa-github"></i>
           </a>
         </div>
         <div class="navbar-item">
-          <a href="https://fullstackmark.com" class="icon is-large has-text-light">
-            <i class="fas fa-2x fa-globe"></i>
+          <a href="https://www.linkedin.com/in/kotra-manish/" class="icon is-large has-text-light">
+            <i class="fab fa-2x fa-linkedin-in"></i>
           </a>
         </div>
       </div>
@@ -44,223 +809,576 @@
       <div class="container">
         <div class="level">
           <div class="level-item has-text-centered">
-            <figure class="image is-128x128">
-              <img class="is-rounded" src="img/me-big.jpg">
+            <figure class="image" style="width: 200px; height: 200px;">
+              <img class="is-rounded" src="img/me-big.jpg" style="height: 100%; width: 100%; object-fit: cover;">
             </figure>
+            <!-- <figure class="image is-128x128">
+              <img class="is-rounded" src="img/me-big.jpg">
+            </figure> -->
           </div>
         </div>
         <div class="columns has-text-centered">
           <div class="column">
             <h1 class="title is-1">
-              Mark Macneil
+              Manish Kumar
             </h1>
             <h2 class="subtitle">
-              FullStack .NET Dev, Halifax, NS
+              AI/ML Engineer
             </h2>
-            <p>
-              <a href="docs/resume.txt" class="icon has-text-light">
-                <i class="fas fa-file-word"></i> <strong>Resume</strong>
-              </a>
-            </p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section">
+  <section id="about" class="section">
     <div class="container">
-      <h1 class="title">About Me</h1>
+      <!-- <h1 class="title">About Me</h1> -->
       <hr />
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
-        laborum.</p>
-    </div>
-  </section>
-  <section class="section">
-    <div class="container">
-      <h1 class="title">Experience</h1>
-      <hr />
-      <div class="card">
-        <div class="card-content">
-          <div class="media">
-            <div class="media-left">
-              <figure class="image is-48x48">
-                <img src="img/dunder-mifflin-logo.png" alt="Placeholder image">
-              </figure>
-            </div>
-            <div class="media-content">
-              <p class="title is-4">Company Name</p>
-              <p class="subtitle is-6">Title - <time datetime="2018-1">January 2018</time> - <time
-                  datetime="2019-9">Sepemter 2019</time> </p>
-            </div>
-          </div>
-          <div class="content">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.</p>
-            <ul>
-              <li>Noteworthy achievment here.</li>
-              <li>Noteworthy achievment here.</li>
-              <li>Noteworthy achievment here.</li>
-            </ul>
-            <div class="tags">
-              <span class="tag">c#</span>
-              <span class="tag">xamarin</span>
-              <span class="tag">asp.net core</span>
-              <span class="tag">.net core</span>
-              <span class="tag">azure</span>
-              <span class="tag">devops</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="card card-gap">
-        <div class="card-content">
-          <div class="media">
-            <div class="media-left">
-              <figure class="image is-48x48">
-                <img src="img/pied-piper-logo.png" alt="Placeholder image">
-              </figure>
-            </div>
-            <div class="media-content">
-              <p class="title is-4">Company Name</p>
-              <p class="subtitle is-6">Title - <time datetime="2018-1">August 2017</time> - <time
-                  datetime="2017-9">January 2018</time></p>
-            </div>
-          </div>
-          <div class="content">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.</p>
-            <ul>
-              <li>Noteworthy achievment here.</li>
-              <li>Noteworthy achievment here.</li>
-              <li>Noteworthy achievment here.</li>
-            </ul>
-            <div class="tags">
-              <span class="tag">c#</span>
-              <span class="tag">xamarin</span>
-              <span class="tag">asp.net core</span>
-              <span class="tag">.net core</span>
-              <span class="tag">azure</span>
-              <span class="tag">devops</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <p class="paragraph">Hi! Welcome to my portfolio.</p>
+
+      <p class="paragraph">I’m an AI/ML engineer passionate about building intelligent and scalable AI systems. I've 3
+        years of
+        experience developing production-grade ML pipelines and GenAI applications. I completed my Master's at the
+        University of Toronto, specializing in Robotics and AI systems. My current interests lie in LLMs and generative
+        AI, with a strong focus on
+        retrieval-augmented generation (RAG), agentic AI systems, and deploying foundation models at scale. I'm also
+        deeply interested in
+        applications of computer vision, reinforcement learning and the broader ecosystem of tools and techniques that
+        power intelligent
+        autonomous systems.</p>
+      <!-- 
+      <p class="paragraph">My current interests lie in LLMs and generative AI, with a strong focus on
+        retrieval-augmented generation (RAG), agentic AI systems, and deploying foundation models at scale. I'm also deeply interested in
+        applications of computer vision, reinforcement learning and the broader ecosystem of tools and techniques that power intelligent
+        autonomous systems.
+      </p> -->
+
+      <!-- <p class="paragraph">My current interests lie in large language models and generative AI, with a strong focus on retrieval-augmented
+        generation (RAG), agentic AI systems, and deploying foundation models at scale. I’m particularly passionate
+        about making cutting-edge models deployable, efficient, and reliable through robust MLOps practices and
+        cloud-native infrastructure. I enjoy working on model fine-tuning—both LLMs and vision-language models (VLMs)—as
+        well as distributed training, model compression, and reinforcement learning. I'm also deeply interested in
+        applications of computer vision and the broader ecosystem of tools and techniques that power intelligent
+        autonomous systems.</p> -->
+
+      <p class="paragraph">
+        Take a look at some of my recent projects here, or explore more of my work on
+        <a href="https://github.com/manish-kotra" target="_blank" rel="noopener noreferrer">GitHub</a> and my
+        <a href="./docs/ManishKumarResume.pdf" target="_blank" rel="noopener noreferrer">Resume</a>.
+      </p>
     </div>
   </section>
 
-  <section class="section">
+  <section id="projects" class="section">
     <div class="container">
       <h1 class="title">Projects</h1>
       <hr />
-      <div class="tile is-ancestor">
-        <div class="tile is-vertical is-12">
-          <div class="tile">
-            <div class="tile is-parent">
-              <article class="tile is-child notification">
-                <p class="title">Project title</p>
-                <figure class="image is-3by2">
-                  <img class="modal-trigger" data-target="project-1-modal" src="img/project-1-cover.png">
-                </figure>
-              </article>
-            </div>
-            <div class="tile is-parent">
-              <article class="tile is-child notification">
-                <p class="title">Project title</p>
-                <figure class="image is-4by3">
-                  <img class="modal-trigger" data-target="project-2-modal" src="img/project-2-cover.png">
-                </figure>
-              </article>
-            </div>
-            <div class="tile is-parent">
-              <article class="tile is-child notification">
-                <p class="title">Project title</p>
-                <figure class="image is-4by3">
-                  <img class="modal-trigger" data-target="project-3-modal" src="img/project-3-cover.png">
-                </figure>
-              </article>
-            </div>
-          </div>
+      <div class="columns is-multiline">
+        <div class="column is-4">
+          <article class="notification modal-trigger" data-target="project-1-modal"
+            style="height: 300px; display: flex; flex-direction: column;">
+            <p class="title is-5" style="margin-bottom: 1rem;">RAG-Powered Web Q&A Bot</p>
+            <figure class="image" style="flex: 1;">
+              <img src="img/project-1-cover.png" style="width: 100%; height: 100%; object-fit: cover;">
+            </figure>
+          </article>
         </div>
-      </div>
-      <div class="tile is-ancestor">
-        <div class="tile is-vertical is-12">
-          <div class="tile">
-            <div class="tile is-parent">
-              <article class="tile is-child notification">
-                <p class="title">Project title</p>
-                <figure class="image is-4by3">
-                  <img class="modal-trigger" data-target="project-4-modal" src="img/project-4-cover.png">
-                </figure>
-              </article>
-            </div>
-            <div class="tile is-parent">
-              <article class="tile is-child notification">
-                <p class="title">Project title</p>
-                <figure class="image is-4by3">
-                  <img class="modal-trigger" data-target="project-5-modal" src="img/project-5-cover.png">
-                </figure>
-              </article>
-            </div>
-            <div class="tile is-parent">
-              <article class="tile is-child notification">
-                <p class="title">Project title</p>
-                <figure class="image is-4by3">
-                  <img class="modal-trigger" data-target="project-6-modal" src="img/project-6-cover.png">
-                </figure>
-              </article>
-            </div>
-          </div>
+        <div class="column is-4">
+          <article class="notification modal-trigger" data-target="project-2-modal"
+            style="height: 300px; display: flex; flex-direction: column;">
+            <p class="title is-5" style="margin-bottom: 1rem;">Text Summarizer Microservice</p>
+            <figure class="image" style="flex: 1;">
+              <img src="img/project-2-cover.png" style="width: 100%; height: 100%; object-fit: cover;">
+            </figure>
+          </article>
+        </div>
+        <div class="column is-4">
+          <article class="notification modal-trigger" data-target="project-3-modal"
+            style="height: 300px; display: flex; flex-direction: column;">
+            <p class="title is-5" style="margin-bottom: 1rem;">LLM-Enhanced Algorithmic Trading System</p>
+            <figure class="image" style="flex: 1;">
+              <img src="img/project-3-cover.png" style="width: 100%; height: 100%; object-fit: cover;">
+            </figure>
+          </article>
+        </div>
+        <div class="column is-4">
+          <article class="notification modal-trigger" data-target="project-4-modal"
+            style="height: 300px; display: flex; flex-direction: column;">
+            <p class="title is-5" style="margin-bottom: 1rem;">Image & Video Deblurring</p>
+            <figure class="image" style="flex: 1;">
+              <img src="img/project-4-cover.png" style="width: 100%; height: 100%; object-fit: cover;">
+            </figure>
+          </article>
+        </div>
+        <div class="column is-4">
+          <article class="notification modal-trigger" data-target="project-5-modal"
+            style="height: 300px; display: flex; flex-direction: column;">
+            <p class="title is-5" style="margin-bottom: 1rem;">Self-Correcting Coding Agent</p>
+            <figure class="image" style="flex: 1;">
+              <img src="img/project-5-cover.png" style="width: 100%; height: 100%; object-fit: cover;">
+            </figure>
+          </article>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section">
+  <section id="skills" class="section">
     <div class="container">
-      <h1 class="title">Education / Training</h1>
+      <h1 class="title">Skills</h1>
       <hr />
-      <div class="card">
-        <div class="card-content">
-          <div class="content">
-            <p class="title is-4">School Name</p>
-            <p class="subtitle is-6">Program/Course - <time datetime="2016-9">September 2016</time> - <time
-                datetime="2019-9">Sepemter 2019</time></p>
+      <div class="columns">
+        <div class="column is-12">
+          <div class="card mb-4 skill-card" data-skill="programming">
+            <div class="card-content">
+              <div class="columns is-vcentered">
+                <div class="column is-3">
+                  <p class="title is-5">Programming Skills</p>
+                </div>
+                <div class="column is-8">
+                  <div class="skill-icons skill-icons-preview">
+                    <div class="skill-item">
+                      <img src="img/skills/python.png" alt="Python">
+                      <span>Python</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/sql.png" alt="SQL">
+                      <span>SQL</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/matlab.png" alt="MATLAB">
+                      <span>MATLAB</span>
+                    </div>
+                    <!-- <div class="skill-item">
+                      <img src="img/skills/html.png" alt="HTML">
+                      <span>HTML</span>
+                    </div>
+                    <div class="skill-item mobile-hidden">
+                      <img src="img/skills/oops.png" alt="OOPs">
+                      <span>OOPs</span>
+                    </div> -->
+                  </div>
+                  <div class="skill-icons skill-icons-full" style="display: none;">
+                    <div class="skill-item">
+                      <img src="img/skills/python.png" alt="Python">
+                      <span>Python</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/sql.png" alt="SQL">
+                      <span>SQL</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/matlab.png" alt="MATLAB">
+                      <span>MATLAB</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/html.png" alt="HTML">
+                      <span>HTML</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/oops.png" alt="OOPs">
+                      <span>OOPs</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="column is-1">
+                  <div class="skill-toggle-container mobile-only">
+                    <button class="button is-small skill-toggle" data-target="programming">
+                      <span class="icon">
+                        <i class="fas fa-chevron-down"></i>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="content">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Phasellus nec iaculis mauris.
-            <ul>
-              <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
-              <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
-            </ul>
+
+          <div class="card mb-4 skill-card" data-skill="tools">
+            <div class="card-content">
+              <div class="columns is-vcentered">
+                <div class="column is-3">
+                  <p class="title is-5">Tools & Frameworks</p>
+                </div>
+                <div class="column is-8">
+                  <div class="skill-icons skill-icons-preview">
+                    <div class="skill-item">
+                      <img src="img/skills/pytorch.png" alt="PyTorch">
+                      <span>PyTorch</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/huggingface.png" alt="Hugging Face">
+                      <span>Hugging Face</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/docker.png" alt="Docker">
+                      <span>Docker</span>
+                    </div>
+                    <!-- <div class="skill-item">
+                      <img src="img/skills/scikit.png" alt="Scikit-Learn">
+                      <span>Scikit-Learn</span>
+                    </div> -->
+                  </div>
+                  <div class="skill-icons skill-icons-full" style="display: none;">
+                    <div class="skill-item">
+                      <img src="img/skills/pytorch.png" alt="PyTorch">
+                      <span>PyTorch</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/huggingface.png" alt="Hugging Face">
+                      <span>Hugging Face</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/docker.png" alt="Docker">
+                      <span>Docker</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/scikit.png" alt="Scikit-Learn">
+                      <span>Scikit-Learn</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/git.png" alt="Git">
+                      <span>Git</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/langchain.png" alt="LangChain">
+                      <span>LangChain</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/langgraph.png" alt="LangGraph">
+                      <span>LangGraph</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/mcp.png" alt="MCP">
+                      <span>MCP</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/mlflow.png" alt="MLflow">
+                      <span>MLflow</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/fastapi.png" alt="FastAPI">
+                      <span>FastAPI</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/streamlit.png" alt="Streamlit">
+                      <span>Streamlit</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/apachespark.png" alt="Apache Spark">
+                      <span>Apache Spark</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/n8n.png" alt="n8n">
+                      <span>n8n</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="column is-1">
+                  <div class="skill-toggle-container mobile-only">
+                    <button class="button is-small skill-toggle" data-target="tools">
+                      <span class="icon">
+                        <i class="fas fa-chevron-down"></i>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="card card-gap">
-        <div class="card-content">
-          <div class="content">
-            <p class="title is-4">School Name</p>
-            <p class="subtitle is-6">Program/Course - <time datetime="2015-9">September 2014</time> - <time
-                datetime="2015-9">Sepemter 2015</time></p>
+
+          <div class="card mb-4 skill-card" data-skill="cloud">
+            <div class="card-content">
+              <div class="columns is-vcentered">
+                <div class="column is-3">
+                  <p class="title is-5">Cloud Platforms</p>
+                </div>
+                <div class="column is-8">
+                  <div class="skill-icons skill-icons-preview">
+                    <div class="skill-item">
+                      <img src="img/skills/azure.png" alt="Azure">
+                      <span>Azure</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/aws.png" alt="AWS">
+                      <span>AWS</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/gcp.png" alt="GCP">
+                      <span>GCP</span>
+                    </div>
+                    <!-- <div class="skill-item">
+                      <img src="img/skills/dbrx.png" alt="Databricks">
+                      <span>Databricks</span>
+                    </div> -->
+                    <div class="skill-item mobile-hidden">
+                      <img src="img/skills/e2b.png" alt="E2B">
+                      <span>E2B</span>
+                    </div>
+                  </div>
+                  <div class="skill-icons skill-icons-full" style="display: none;">
+                    <div class="skill-item">
+                      <img src="img/skills/azure.png" alt="Azure">
+                      <span>Azure</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/aws.png" alt="AWS">
+                      <span>AWS</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/gcp.png" alt="GCP">
+                      <span>GCP</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/dbrx.png" alt="Databricks">
+                      <span>Databricks</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/e2b.png" alt="E2B">
+                      <span>E2B</span>
+                    </div>
+
+                  </div>
+                </div>
+                <div class="column is-1">
+                  <div class="skill-toggle-container mobile-only">
+                    <button class="button is-small skill-toggle" data-target="cloud">
+                      <span class="icon">
+                        <i class="fas fa-chevron-down"></i>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="content">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Phasellus nec iaculis mauris.
-            <ul>
-              <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
-              <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
-            </ul>
+
+          <div class="card skill-card" data-skill="databases">
+            <div class="card-content">
+              <div class="columns is-vcentered">
+                <div class="column is-3">
+                  <p class="title is-5">Databases</p>
+                </div>
+                <div class="column is-8">
+                  <div class="skill-icons skill-icons-preview">
+                    <div class="skill-item">
+                      <img src="img/skills/chroma.png" alt="ChromaDB">
+                      <span>Chroma</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/qdrant.png" alt="Qdrant">
+                      <span>Qdrant</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/mongodb.png" alt="MongoDB">
+                      <span>MongoDB</span>
+                    </div>
+                    <div class="skill-item mobile-hidden">
+                      <img src="img/skills/mysql.png" alt="MySQL">
+                      <span>MySQL</span>
+                    </div>
+                  </div>
+                  <div class="skill-icons skill-icons-full" style="display: none;">
+                    <div class="skill-item">
+                      <img src="img/skills/chroma.png" alt="ChromaDB">
+                      <span>Chroma</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/qdrant.png" alt="Qdrant">
+                      <span>Qdrant</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/mongodb.png" alt="MongoDB">
+                      <span>MongoDB</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/mysql.png" alt="MySQL">
+                      <span>MySQL</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="column is-1">
+                  <div class="skill-toggle-container mobile-only">
+                    <button class="button is-small skill-toggle" data-target="databases">
+                      <span class="icon">
+                        <i class="fas fa-chevron-down"></i>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section">
+  <section id="experience" class="section">
     <div class="container">
-      <h1 class="title">Contact</h1>
+      <h1 class="title">Experience</h1>
+      <hr />
+      <div class="card content-card" id="exp-tech2u" data-section="experience">
+        <div class="card-content">
+          <div class="media">
+            <div class="media-left">
+              <figure class="image is-48x48">
+                <img src="img/tech2U.png" alt="Tech2U">
+              </figure>
+            </div>
+            <div class="media-content">
+              <div class="media-content-flex">
+                <div class="title-container">
+                  <p class="title is-4">Tech2U - University of Toronto</p>
+                </div>
+              </div>
+              <p class="subtitle is-6">Classroom Ambassador (Data Science) - <time datetime="2024-09">September
+                  2024</time> - <time datetime="2025-04">April 2025</time> </p>
+              <!-- <p class="job-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.</p> -->
+            </div>
+          </div>
+          <div class="card-details" id="exp-tech2u-details">
+            <div class="content">
+              <!-- <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.</p> -->
+              <ul>
+                <li>Led development of a scalable multimodal RAG pipeline for retrieving information from large-scale
+                  text and visual datasets, integrating a ColPali-based vision-language retriever. </li>
+                <li>Optimized retrieval performance with 4-bit QLoRA fine-tuning, novel 32× patch-reducing pooling, and
+                  re-ranking achieving ~93% NDCG@10—resulting in a 10× speedup over baseline.</li>
+                <li>Designed a kernel-based embedding fusion method and SmolDocling-powered document parser to enhance
+                  LLM response grounding; collaborated with domain experts to productionize chatbot behavior via prompt
+                  tuning and FastAPI integration.</li>
+              </ul>
+              <div class="tags">
+                <span class="tag">Python</span>
+                <span class="tag">RAG</span>
+                <span class="tag">NLP</span>
+                <span class="tag">LLMs</span>
+                <span class="tag">Prompt Engineering</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="toggle-container">
+          <div class="card-toggle">
+            <span class="icon">
+              <i class="fas fa-chevron-down"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="card card-gap content-card" id="exp-airl" data-section="experience">
+        <div class="card-content">
+          <div class="media">
+            <div class="media-left">
+              <figure class="image is-48x48">
+                <img src="img/AIRL.png" alt="AIRL">
+              </figure>
+            </div>
+            <div class="media-content">
+              <div class="media-content-flex">
+                <div class="title-container">
+                  <p class="title is-4">Artificial Intelligence and Robotics Lab</p>
+                </div>
+              </div>
+              <p class="subtitle is-6">Research Assistant - <time datetime="2019-10">October 2019</time> - <time
+                  datetime="2022-10">October 2022</time></p>
+              <!-- <p class="job-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.</p> -->
+            </div>
+          </div>
+          <div class="card-details" id="exp-airl-details">
+            <div class="content">
+              <!-- <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.</p> -->
+              <ul>
+                <li>Built surrogate ML models with &lt5% error to approximate aerodynamic control surface effects, and
+                  developed physics-informed ML models integrating 6DOF models enabling real-time aircraft simulations
+                  with sub-millisecond latency.</li>
+                <li>Designed ELT pipelines and visualization dashboards to process wind tunnel data at scale, uncovering
+                  insights that improved roll performance by 8% and informed design iterations.</li>
+                <li>Architected end-to-end simulation and deployment workflows—including SIL/HIL pipelines and
+                  MATLAB-based auto code generation—cutting system validation and controller development time by over
+                  30%.</li>
+              </ul>
+              <div class="tags">
+                <span class="tag">Machine Learning</span>
+                <span class="tag">Software Development</span>
+                <span class="tag">Data Science</span>
+                <span class="tag">Python</span>
+                <span class="tag">Matlab</span>
+                <span class="tag">Devops</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="toggle-container">
+          <div class="card-toggle">
+            <span class="icon">
+              <i class="fas fa-chevron-down"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="education" class="section">
+    <div class="container">
+      <h1 class="title">Education</h1>
+      <hr />
+      <div class="card content-card" id="edu-uoft" data-section="education">
+        <div class="card-content">
+          <div class="media">
+            <div class="media-left">
+              <figure class="image is-48x48">
+                <img src="img/uoft-logo.png" alt="University of Toronto Logo" style="max-height: 100%; width: auto;">
+              </figure>
+            </div>
+            <div class="media-content">
+              <div class="media-content-flex">
+                <div class="title-container">
+                  <p class="title is-4">University of Toronto</p>
+                </div>
+              </div>
+              <p class="subtitle is-6">Master of Engineering (Robotics) - <time datetime="2023-1">January 2023</time> -
+                <time datetime="2025-April">April 2025</time>
+              </p>
+              <!-- <p>Specializing in artificial intelligence, computer vision, and autonomous systems with emphasis on practical implementations in robotic systems.</p> -->
+            </div>
+          </div>
+
+          <div class="card-details" id="edu-uoft-details">
+            <div class="content">
+              <p class="has-text-weight-semibold">Courses:</p>
+              <ul class="two-column-list">
+                <li> Machine Learning</li>
+                <li> Natural Language Processing</li>
+                <li> Neural Networks and Deep Learning</li>
+                <li> Computer Vision</li>
+                <li> Big Data and Cloud-Based Data Analytics</li>
+                <li> Perception in Robotics</li>
+                <li> Reinforcement Learning</li>
+                <li> Development of UAVs</li>
+                <li> Motion Planning</li>
+                <li> State Estimation</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="toggle-container">
+          <div class="card-toggle">
+            <span class="icon">
+              <i class="fas fa-chevron-down"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="section">
+    <div class="container">
+      <!-- <h1 class="title">Contact</h1> -->
       <hr />
       <nav class="level">
         <div class="level-item has-text-centered">
@@ -268,31 +1386,31 @@
             <a href="https://github.com/mmacneil" class="icon is-large">
               <i class="fab fa-2x fa-github"></i>
             </a>
-            <p class="heading"><a href="https://github.com/mmacneil">github.com/mmacneil</a></p>
+            <p class="heading"><a href="https://github.com/manish-kotra">github.com/manish-kotra</a></p>
           </div>
         </div>
-        <div class="level-item has-text-centered">
+        <!-- <div class="level-item has-text-centered">
           <div>
             <a href="https://fullstackmark.com" class="icon is-large">
               <i class="fas fa-2x fa-globe"></i>
             </a>
             <p class="heading"><a href="https://fullstackmark.com">fullstackmark.com</a></p>
           </div>
-        </div>
+        </div> -->
         <div class="level-item has-text-centered">
           <div>
             <a href="mailto:markmacneil@gmail.com" class="icon is-large">
               <i class="fas fa-2x fa-envelope"></i>
             </a>
-            <p class="heading"><a href="mailto:markmacneil@gmail.com">markmacneil@gmail.com</a></p>
+            <p class="heading"><a href="mailto:mak.manishkotra@gmail.com">mak.manishkotra@gmail.com</a></p>
           </div>
         </div>
         <div class="level-item has-text-centered">
           <div>
-            <a href="https://www.linkedin.com/in/markmacneilhfx" class="icon is-large">
+            <a href="https://www.linkedin.com/in/kotra-manish/" class="icon is-large">
               <i class="fab fa-2x fa-linkedin-in"></i>
             </a>
-            <p class="heading"><a href="https://www.linkedin.com/in/markmacneilhfx">linkedin</a></p>
+            <p class="heading"><a href="https://www.linkedin.com/in/kotra-manish/">linkedin</a></p>
           </div>
         </div>
       </nav>
@@ -304,12 +1422,12 @@
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Project title</p>
+        <p class="modal-card-title">RAG-Powered Web Q&A Bot</p>
         <button class="delete" aria-label="close"></button>
       </header>
       <section class="modal-card-body">
 
-        <div id="project-1-modal-carousel" class="carousel">
+        <!-- <div id="project-1-modal-carousel" class="carousel">
           <figure class="image is-4by3 carousel-cell">
             <img src="img/carousel/1.png">
           </figure>
@@ -319,23 +1437,53 @@
           <figure class="image is-4by3 carousel-cell">
             <img src="img/carousel/3.png">
           </figure>
-        </div>
+        </div> -->
 
         <div class="content">
-
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore
-            magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-            commodo
-            consequat.</p>
+          ,<ul>
+            <li>
+              <strong>Backend & Vector Store Integration:</strong> Developed a FastAPI backend with asynchronous
+              endpoints for document upload, chunking, embedding, and vector storage using ChromaDB to enable fast and
+              scalable retrieval.
+            </li>
+            <li>
+              <strong>Frontend Chat Interface:</strong> Built an interactive Streamlit-based chat UI that allows users
+              to query uploaded documents through a conversational interface with citation-backed responses.
+            </li>
+            <li>
+              <strong>RAG Pipeline Engineering:</strong> Engineered a modular RAG pipeline combining document parsing,
+              embedding generation, vector similarity search, and cross-encoder re-ranking to improve relevance and
+              response quality.
+            </li>
+            <li>
+              <strong>Deployment & Containerization:</strong> Containerized the full stack using Docker and Docker
+              Compose, ensuring reproducible local development and seamless multi-environment deployment.
+            </li>
+          </ul>
 
           <div class="tags">
-            <span class="tag">angular</span>
-            <span class="tag">mongo</span>
-            <span class="tag">typscript</span>
-            <span class="tag">node</span>
+            <span class="tag">langchain</span>
+            <span class="tag">FastAPI</span>
+            <span class="tag">OCR</span>
+            <span class="tag">docling</span>
+            <span class="tag">docker</span>
+            <span class="tag">streamlit</span>
           </div>
 
+          <div class="project-links-container">
+            <a href="https://github.com/manish-kotra/RAG-Web-App" class="project-link" target="_blank">
+              <span class="icon">
+                <i class="fab fa-github"></i>
+              </span>
+              <span>Source Code</span>
+            </a>
+            <a href="#" class="project-link" target="_blank">
+              <span class="icon">
+                <i class="fas fa-external-link-alt"></i>
+              </span>
+              <span>Live Demo</span>
+            </a>
+          </div>
         </div>
 
       </section>
@@ -349,12 +1497,12 @@
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Project title</p>
+        <p class="modal-card-title">Text Summarizer Microservice</p>
         <button class="delete" aria-label="close"></button>
       </header>
       <section class="modal-card-body">
 
-        <div id="project-2-modal-carousel" class="carousel">
+        <!-- <div id="project-2-modal-carousel" class="carousel">
           <figure class="image is-4by3 carousel-cell">
             <img src="img/carousel/1.png">
           </figure>
@@ -364,23 +1512,56 @@
           <figure class="image is-4by3 carousel-cell">
             <img src="img/carousel/3.png">
           </figure>
-        </div>
+        </div> -->
 
         <div class="content">
 
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore
-            magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-            commodo
-            consequat.</p>
+          <ul>
+            <li>
+              <strong>Modular Summarization Pipeline:</strong> Designed a Python-based microservice to generate concise
+              summaries from long-form text, featuring a well-structured, component-based architecture.
+            </li>
+            <li>
+              <strong>Configuration-Driven Development:</strong> Enabled flexibility and reusability through YAML-based
+              configuration files for model parameters, logging, and runtime settings.
+            </li>
+            <li>
+              <strong>Scalable API Integration:</strong> Exposed summarization capabilities via RESTful APIs using
+              FastAPI, allowing seamless integration into external applications and services.
+            </li>
+            <li>
+              <strong>Containerized Deployment:</strong> Dockerized the full application for platform-agnostic
+              deployment with simple one-command execution.
+            </li>
+            <li>
+              <strong>Robust Logging & Utilities:</strong> Implemented a centralized logging system and project
+              scaffolding utilities for easy debugging, monitoring, and reproducible development.
+            </li>
+          </ul>
 
           <div class="tags">
-            <span class="tag">angular</span>
-            <span class="tag">mongo</span>
-            <span class="tag">typscript</span>
-            <span class="tag">node</span>
+            <span class="tag">text summarization</span>
+            <span class="tag">llm fine-tuning</span>
+            <span class="tag">microservice</span>
+            <span class="tag">RESTful</span>
+            <span class="tag">docker</span>
+
           </div>
 
+          <div class="project-links-container">
+            <a href="https://github.com/manish-kotra/Text-Summarizer-Microservice" class="project-link" target="_blank">
+              <span class="icon">
+                <i class="fab fa-github"></i>
+              </span>
+              <span>Source Code</span>
+            </a>
+            <!-- <a href="#" class="project-link" target="_blank">
+              <span class="icon">
+                <i class="fas fa-external-link-alt"></i>
+              </span>
+              <span>Live Demo</span>
+            </a> -->
+          </div>
         </div>
 
       </section>
@@ -394,11 +1575,11 @@
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Project title</p>
+        <p class="modal-card-title">LLM-Enhanced Algorithmic Trading System</p>
         <button class="delete" aria-label="close"></button>
       </header>
       <section class="modal-card-body">
-        <div id="project-3-modal-carousel" class="carousel">
+        <!-- <div id="project-3-modal-carousel" class="carousel">
           <figure class="image is-4by3 carousel-cell">
             <img src="img/carousel/1.png">
           </figure>
@@ -408,19 +1589,59 @@
           <figure class="image is-4by3 carousel-cell">
             <img src="img/carousel/3.png">
           </figure>
-        </div>
+        </div> -->
 
         <div class="content">
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore
-            magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-            commodo
-            consequat.</p>
+          <ul>
+            <li>
+              <strong>Sentiment Model Fine-Tuning:</strong> Fine-tuned a BERT-based sentiment classifier on the
+              Financial PhraseBank dataset and benchmarked it against FinBERT, improving sentiment classification
+              accuracy for financial news.
+            </li>
+            <li>
+              <strong>Data Engineering & ELT Pipelines:</strong> Curated over 3,300 days of Bitcoin price and news data
+              using custom web scrapers; performed data cleaning, transformation, and sentiment labeling with VADER and
+              transformer-based models.
+            </li>
+            <li>
+              <strong>Feature Engineering & Time Series Analysis:</strong> Extracted time series and sentiment-based
+              features including technical indicators and lagged correlations, enabling more predictive trading signals.
+            </li>
+            <li>
+              <strong>AutoML Workflow Development:</strong> Designed an AutoML pipeline combining Ridge, Random Forest,
+              and Gradient Boosting models; achieved a 40% improvement over baseline via automated model selection and
+              hyperparameter tuning.
+            </li>
+            <li>
+              <strong>Strategy Evaluation:</strong> Developed and evaluated a data-driven trading strategy that
+              consistently outperformed a naive buy-and-hold approach, showcasing the predictive power of
+              sentiment-aware features.
+            </li>
+          </ul>
+
           <div class="tags">
-            <span class="tag">angular</span>
-            <span class="tag">mongo</span>
-            <span class="tag">typscript</span>
-            <span class="tag">node</span>
+            <span class="tag">sentiment analysis</span>
+            <span class="tag">dataset curation</span>
+            <span class="tag">feature engineering</span>
+            <span class="tag">time series analysis</span>
+            <span class="tag">auto ML</span>
+            <span class="tag">BERT encoder</span>
+            <span class="tag">BERT encoder</span>
+          </div>
+
+          <div class="project-links-container">
+            <a href="https://github.com/manish-kotra/project-3" class="project-link" target="_blank">
+              <span class="icon">
+                <i class="fab fa-github"></i>
+              </span>
+              <span>Source Code</span>
+            </a>
+            <a href="#" class="project-link" target="_blank">
+              <span class="icon">
+                <i class="fas fa-external-link-alt"></i>
+              </span>
+              <span>Live Demo</span>
+            </a>
           </div>
         </div>
 
@@ -435,36 +1656,59 @@
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Project title</p>
+        <p class="modal-card-title">Image & Video Deblurring</p>
         <button class="delete" aria-label="close"></button>
       </header>
       <section class="modal-card-body">
-        <div id="project-4-modal-carousel" class="carousel">
+        <!-- <div id="project-4-modal-carousel" class="carousel">
           <figure class="image is-4by3 carousel-cell">
             <img src="img/carousel/1.png">
           </figure>
-          <figure class="image is-4by3 carousel-cell">
-            <img src="img/carousel/2.png">
-          </figure>
-          <figure class="image is-4by3 carousel-cell">
-            <img src="img/carousel/3.png">
-          </figure>
-        </div>
+        </div> -->
 
         <div class="content">
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore
-            magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-            commodo
-            consequat.</p>
+          <ul>
+            <li>
+              <strong>Model Architecture:</strong> Designed a compact CNN-based Nested-ResNet architecture (<9M
+                parameters) in PyTorch, outperforming DeblurGAN-V2 (60M) by 1.2 dB in PSNR through extensive literature
+                review and custom design. </li>
+            <li>
+              <strong>Adversarial Training Optimization:</strong> Implemented a layer-wise adversarial training scheme
+              to enhance perceptual quality and robustness of deblurring performance across diverse image types.
+            </li>
+            <li>
+              <strong>Distributed & Mixed Precision Training:</strong> Scaled the training pipeline using distributed
+              training with mixed precision across 2 heterogeneous GPUs, enabling a 200% increase in batch size and
+              significantly improved training efficiency.
+            </li>
+            <li>
+              <strong>Ongoing Research:</strong> Currently exploring blur-conditioned Latent Diffusion with multi-scale
+              guidance and self-supervised perceptual similarity metrics to improve out-of-domain generalization.
+            </li>
+          </ul>
+
           <div class="tags">
-            <span class="tag">angular</span>
-            <span class="tag">mongo</span>
-            <span class="tag">typscript</span>
-            <span class="tag">node</span>
+            <span class="tag">CNNs</span>
+            <span class="tag">diffusion</span>
+            <span class="tag">distributed training</span>
+            <span class="tag">deep learning</span>
+          </div>
+
+          <div class="project-links-container">
+            <a href="https://github.com/manish-kotra/project-4" class="project-link" target="_blank">
+              <span class="icon">
+                <i class="fab fa-github"></i>
+              </span>
+              <span>Source Code</span>
+            </a>
+            <!-- <a href="#" class="project-link" target="_blank">
+              <span class="icon">
+                <i class="fas fa-external-link-alt"></i>
+              </span>
+              <span>Live Demo</span>
+            </a> -->
           </div>
         </div>
-
       </section>
       <footer class="modal-card-foot">
         <button class="button is-success">Close</button>
@@ -476,41 +1720,62 @@
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Project title</p>
+        <p class="modal-card-title">Self-Correcting Coding Agent</p>
         <button class="delete" aria-label="close"></button>
       </header>
       <section class="modal-card-body">
-        <div id="project-5-modal-carousel" class="carousel">
-          <figure class="image is-4by3 carousel-cell">
-            <img src="img/carousel/1.png">
-          </figure>
+        <!-- <div id="project-5-modal-carousel" class="carousel">
           <figure class="image is-4by3 carousel-cell">
             <img src="img/carousel/2.png">
           </figure>
-          <figure class="image is-4by3 carousel-cell">
-            <img src="img/carousel/3.png">
-          </figure>
-        </div>
+        </div> -->
 
         <div class="content">
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore
-            magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-            commodo
-            consequat.</p>
-          <div class="tags">
-            <span class="tag">angular</span>
-            <span class="tag">mongo</span>
-            <span class="tag">typscript</span>
-            <span class="tag">node</span>
-          </div>
-        </div>
+          <ul>
+            <li>
+              <strong>Agent Architecture:</strong> Developed a modular self-correcting LLM-based coding agent using
+              LangGraph for automated code generation and debugging with multi-stage validation and iterative repair
+              loops.
+            </li>
+            <li>
+              <strong>Secure Code Execution:</strong> Integrated E2B sandboxing to execute generated code in isolated
+              environments, enabling automatic import resolution, runtime validation, and error recovery without human
+              input.
+            </li>
+            <li>
+              <strong>LLM & RAG Integration:</strong> Combined GPT-4o for chain-of-thought (CoT) reasoning with a
+              RAG-powered CodeLLaMA module, reducing function call overhead and improving accuracy in multi-step
+              problem-solving tasks.
+            </li>
+          </ul>
 
-      </section>
-      <footer class="modal-card-foot">
-        <button class="button is-success">Close</button>
-      </footer>
+          <div class="tags">
+            <span class="tag">langgraph</span>
+            <span class="tag">multi-agent</span>
+            <span class="tag">sandbox</span>
+            <span class="tag">RAG</span>
+          </div>
+
+          <!-- <div class="project-links-container">
+            <a href="https://github.com/manish-kotra/project-5" class="project-link" target="_blank">
+              <span class="icon">
+                <i class="fab fa-github"></i>
+              </span>
+              <span>Source Code</span>
+            </a>
+            <a href="#" class="project-link" target="_blank">
+              <span class="icon">
+                <i class="fas fa-external-link-alt"></i>
+              </span>
+              <span>Live Demo</span>
+            </a> -->
+        </div>
     </div>
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button is-success">Close</button>
+    </footer>
+  </div>
   </div>
 
   <div id="project-6-modal" class="modal">
@@ -523,30 +1788,35 @@
       <section class="modal-card-body">
         <div id="project-6-modal-carousel" class="carousel">
           <figure class="image is-4by3 carousel-cell">
-            <img src="img/carousel/1.png">
-          </figure>
-          <figure class="image is-4by3 carousel-cell">
-            <img src="img/carousel/2.png">
-          </figure>
-          <figure class="image is-4by3 carousel-cell">
             <img src="img/carousel/3.png">
           </figure>
         </div>
 
         <div class="content">
           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore
-            magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-            commodo
             consequat.</p>
+
           <div class="tags">
-            <span class="tag">angular</span>
-            <span class="tag">mongo</span>
-            <span class="tag">typscript</span>
-            <span class="tag">node</span>
+            <span class="tag">django</span>
+            <span class="tag">python</span>
+            <span class="tag">postgresql</span>
+          </div>
+
+          <div class="project-links-container">
+            <a href="https://github.com/manish-kotra/project-6" class="project-link" target="_blank">
+              <span class="icon">
+                <i class="fab fa-github"></i>
+              </span>
+              <span>Source Code</span>
+            </a>
+            <a href="#" class="project-link" target="_blank">
+              <span class="icon">
+                <i class="fas fa-external-link-alt"></i>
+              </span>
+              <span>Live Demo</span>
+            </a>
           </div>
         </div>
-
       </section>
       <footer class="modal-card-foot">
         <button class="button is-success">Close</button>
@@ -563,7 +1833,618 @@
     </div>
   </footer>
 
+  <!-- Chat Popup -->
+  <div class="chat-popup">
+    <div class="chat-window" id="chat-window">
+      <div class="chat-header">
+        <span>Chat with my Resume</span>
+        <span class="close-chat" id="close-chat">&times;</span>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <!-- Messages will appear here -->
+        <div class="message bot-message">
+          <div class="message-content">
+            Hello! I'm Manish's resume bot. Ask me anything about Manish's experience, skills, or projects!
+          </div>
+        </div>
+      </div>
+      <div class="chat-input-container">
+        <div class="field has-addons">
+          <div class="control is-expanded">
+            <input class="input" type="text" id="chat-input" placeholder="Ask me anything about Manish">
+          </div>
+          <div class="control">
+            <button class="button is-primary" id="send-button">
+              <span class="icon">
+                <i class="fas fa-paper-plane"></i>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="chat-notification" id="chat-notification">
+      Hello! I'm Manish's resume bot.
+    </div>
+    <div class="chat-button pulse" id="chat-button">
+      <img src="img/robot.png" alt="Chat Bot" class="chat-icon">
+    </div>
+  </div>
+
   <script src="js/bundle.js"></script>
+
+  <script>
+    // Function to set theme colors
+    function setTheme(theme) {
+      const root = document.documentElement;
+
+      if (theme === 'default') {
+        // Default theme (teal)
+        root.style.setProperty('--color-primary', '#00d1b2');
+        root.style.setProperty('--color-primary-dark', '#00a08c');
+        root.style.setProperty('--color-primary-light', '#ebfffc');
+        root.style.setProperty('--color-accent', '#3273dc');
+        root.style.setProperty('--color-accent-dark', '#2160c4');
+        root.style.setProperty('--color-accent-light', '#eef3fc');
+      } else if (theme === 'blue') {
+        // Blue theme
+        root.style.setProperty('--color-primary', '#3273dc');
+        root.style.setProperty('--color-primary-dark', '#2160c4');
+        root.style.setProperty('--color-primary-light', '#eef3fc');
+        root.style.setProperty('--color-accent', '#ff3860');
+        root.style.setProperty('--color-accent-dark', '#ff1443');
+        root.style.setProperty('--color-accent-light', '#feecf0');
+      } else if (theme === 'purple') {
+        // Purple theme
+        root.style.setProperty('--color-primary', '#8A4D76');
+        root.style.setProperty('--color-primary-dark', '#7A3D66');
+        root.style.setProperty('--color-primary-light', '#f7f0f5');
+        root.style.setProperty('--color-accent', '#FA7C91');
+        root.style.setProperty('--color-accent-dark', '#F96477');
+        root.style.setProperty('--color-accent-light', '#fef0f3');
+      } else if (theme === 'dark') {
+        // Dark theme
+        root.style.setProperty('--color-primary', '#363636');
+        root.style.setProperty('--color-primary-dark', '#292929');
+        root.style.setProperty('--color-primary-light', '#e8e8e8');
+        root.style.setProperty('--color-accent', '#00d1b2');
+        root.style.setProperty('--color-accent-dark', '#00a08c');
+        root.style.setProperty('--color-accent-light', '#ebfffc');
+        root.style.setProperty('--color-background', '#121212');
+        root.style.setProperty('--color-text', '#f5f5f5');
+        root.style.setProperty('--color-text-light', '#b5b5b5');
+        root.style.setProperty('--color-border', '#4a4a4a');
+      }
+    }
+
+    // If you want to set a theme, uncomment and call this:
+    // setTheme('default');
+
+    // Chatbot functionality - placeholder for now
+    document.addEventListener('DOMContentLoaded', () => {
+      // Mobile hamburger menu toggle
+      const navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+      if (navbarBurgers.length > 0) {
+        navbarBurgers.forEach(el => {
+          el.addEventListener('click', () => {
+            const target = document.getElementById(el.dataset.target);
+            // Toggle the 'is-active' class on both the burger and the menu
+            el.classList.toggle('is-active');
+            target.classList.toggle('is-active');
+          });
+        });
+      }
+
+      // Active link highlighting and smooth scrolling
+      const sections = document.querySelectorAll('section[id]');
+      const navItems = document.querySelectorAll('.navbar-item');
+
+      window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+          const sectionTop = section.offsetTop;
+          const sectionHeight = section.clientHeight;
+          if (scrollY >= (sectionTop - 200)) {
+            current = section.getAttribute('id');
+          }
+        });
+
+        navItems.forEach(item => {
+          item.classList.remove('is-active');
+          if (item.getAttribute('href') === `#${current}`) {
+            item.classList.add('is-active');
+          }
+        });
+      });
+
+      const chatInput = document.getElementById('chat-input');
+      const sendButton = document.getElementById('send-button');
+      const chatMessages = document.getElementById('chat-messages');
+      const chatButton = document.getElementById('chat-button');
+      const chatWindow = document.getElementById('chat-window');
+      const closeChat = document.getElementById('close-chat');
+      const chatNotification = document.getElementById('chat-notification');
+
+      // Chatbot API configuration
+      const CHATBOT_API_URL = "https://resumebot-751887663239.northamerica-northeast2.run.app";
+      let chatSessionId = null;
+
+      // Initialize chat session immediately when page loads
+      initChatSession();
+
+      // Function to initialize chat session without opening chat window
+      async function initChatSession() {
+        console.log("Initializing chat session...");
+        try {
+          const response = await fetch(`${CHATBOT_API_URL}/chat`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          });
+
+          if (!response.ok) {
+            console.error('Failed to create chat session:', response.status);
+            return false;
+          }
+
+          const data = await response.json();
+          chatSessionId = data.session_id;
+          console.log("Chat session created:", chatSessionId);
+          return true;
+        } catch (error) {
+          console.error('Error creating chat session:', error);
+          return false;
+        }
+      }
+
+      // Fallback responses - used when API is unreachable
+      const fallbackResponses = {
+        "skills": "Manish's key skills include C#, .NET, ASP.NET Core, JavaScript, and cloud technologies like Azure.",
+        "experience": "Manish has worked with various companies including positions as a FullStack Developer with experience in .NET and web technologies.",
+        "projects": "Manish has worked on several interesting projects spanning web development, mobile apps, and cloud solutions.",
+        "education": "Manish has formal education in computer science and continues professional development through online courses and certifications.",
+        "default": "I don't have that information yet. Please ask about Manish's skills, experience, projects, or education."
+      };
+
+      // Chat toggle functionality
+      let isChatOpen = false;
+
+      function toggleChat() {
+        isChatOpen = !isChatOpen;
+
+        if (isChatOpen) {
+          chatWindow.classList.add('active');
+          chatButton.classList.add('active');
+          chatButton.classList.remove('pulse');
+          chatNotification.classList.remove('active');
+          chatButton.innerHTML = '<i class="fas fa-times"></i>';
+          chatButton.style.padding = '15px';
+
+          // If we don't have a session yet (which is unlikely since we create one on page load),
+          // try to create one again
+          if (!chatSessionId) {
+            initChatSession().then(success => {
+              if (!success) {
+                // Show a warning message if the API is unreachable
+                addMessage("I'm currently running in offline mode as I couldn't connect to my AI brain. Some features may be limited.");
+              }
+            });
+          }
+
+          // Focus on input when chat is opened
+          setTimeout(() => {
+            chatInput.focus();
+          }, 300);
+        } else {
+          chatWindow.classList.remove('active');
+          chatButton.classList.remove('active');
+          chatButton.innerHTML = '<img src="img/robot.png" alt="Chat Bot" class="chat-icon">';
+          chatButton.style.padding = '5px';
+
+          // Show notification when chat is closed
+          setTimeout(() => {
+            if (!isChatOpen) {
+              chatNotification.classList.add('active');
+            }
+          }, 1000);
+
+          // Hide notification after 5 seconds
+          setTimeout(() => {
+            chatNotification.classList.remove('active');
+          }, 6000);
+        }
+      }
+
+      // Show notification after page load
+      setTimeout(() => {
+        if (!isChatOpen) {
+          chatNotification.classList.add('active');
+
+          // Hide notification after 5 seconds
+          setTimeout(() => {
+            chatNotification.classList.remove('active');
+
+            // Start pulsing after notification is hidden
+            if (!isChatOpen) {
+              chatButton.classList.add('pulse');
+            }
+          }, 5000);
+        }
+      }, 3000);
+
+      function addMessage(content, isUser = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = isUser ? 'message user-message' : 'message bot-message';
+
+        // Format the message content if it's from the bot
+        let formattedContent = content;
+        if (!isUser) {
+          // Convert markdown-style formatting
+          formattedContent = formatBotMessage(content);
+        }
+
+        messageDiv.innerHTML = `
+          <div class="message-content">
+            ${formattedContent}
+          </div>
+        `;
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+      // Function to format bot messages with markdown-like syntax
+      function formatBotMessage(text) {
+        if (!text) return '';
+
+        // Handle bold text (**text**)
+        text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+        // Handle bullet points
+        text = text.replace(/\n\s*\*\s+(.*?)(?=\n|$)/g, '\n<li>$1</li>');
+        if (text.includes('<li>')) {
+          text = text.replace(/((?:<li>.*?<\/li>\n?)+)/g, '<ul>$1</ul>');
+        }
+
+        // Handle paragraphs
+        text = text.replace(/\n\n/g, '<br><br>');
+
+        // Handle single line breaks
+        text = text.replace(/\n/g, '<br>');
+
+        return text;
+      }
+
+      function processMessage(message) {
+        message = message.toLowerCase();
+
+        // Simple keyword matching - will be enhanced later
+        if (message.includes('skill') || message.includes('know') || message.includes('ability')) {
+          return responses.skills;
+        } else if (message.includes('experience') || message.includes('work') || message.includes('job')) {
+          return responses.experience;
+        } else if (message.includes('project') || message.includes('portfolio') || message.includes('built')) {
+          return responses.projects;
+        } else if (message.includes('education') || message.includes('degree') || message.includes('study') || message.includes('learn')) {
+          return responses.education;
+        } else {
+          return responses.default;
+        }
+      }
+
+      function handleSend() {
+        const message = chatInput.value.trim();
+        if (message === '') return;
+
+        // Add user message
+        addMessage(message, true);
+
+        // Clear input
+        chatInput.value = '';
+
+        // Special command for testing formatted bio (just for development)
+        if (message.toLowerCase() === '/test-bio') {
+          testFormattedBio();
+          return;
+        }
+
+        // Add typing indicator
+        const typingIndicator = document.createElement('div');
+        typingIndicator.className = 'message bot-message typing-indicator';
+        typingIndicator.innerHTML = `
+          <div class="message-content">
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+          </div>
+        `;
+        chatMessages.appendChild(typingIndicator);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // Send message to API if we have a session (we should already have it from page load)
+        if (chatSessionId) {
+          sendMessageToAPI(message, typingIndicator);
+        } else {
+          // If somehow we don't have a session yet, try to create one and then send the message
+          initChatSession().then(success => {
+            if (success) {
+              sendMessageToAPI(message, typingIndicator);
+            } else {
+              // Fall back to local processing if can't create session
+              fallbackProcessMessage(message, typingIndicator);
+            }
+          });
+        }
+      }
+
+      // Send message to chatbot API
+      async function sendMessageToAPI(message, typingIndicator) {
+        try {
+          const response = await fetch(`${CHATBOT_API_URL}/chat/${chatSessionId}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message: message })
+          });
+
+          // Remove typing indicator
+          if (typingIndicator) {
+            chatMessages.removeChild(typingIndicator);
+          }
+
+          if (!response.ok) {
+            console.error('API response error:', response.status);
+            // Fall back to local processing
+            fallbackProcessMessage(message);
+            return;
+          }
+
+          const data = await response.json();
+          // Process the response - preserve any formatting from the API
+          addMessage(data.response);
+
+        } catch (error) {
+          console.error('Error sending message to API:', error);
+
+          // Remove typing indicator
+          if (typingIndicator) {
+            chatMessages.removeChild(typingIndicator);
+          }
+
+          // Fall back to local processing
+          fallbackProcessMessage(message);
+        }
+      }
+
+      // Fall back to simple keyword matching when API is unavailable
+      function fallbackProcessMessage(message, typingIndicator) {
+        // Remove typing indicator if it exists
+        if (typingIndicator) {
+          chatMessages.removeChild(typingIndicator);
+        }
+
+        message = message.toLowerCase();
+        let response = '';
+
+        // Simple keyword matching
+        if (message.includes('skill') || message.includes('know') || message.includes('ability') ||
+          message.includes('background') || message.includes('about you') || message.includes('tell me about')) {
+          // Use the formatted bio for skills and background questions
+          response = `I'm a versatile AI/ML engineer with a strong track record in developing and deploying innovative solutions. I excel in areas like:
+
+* **Generative AI and LLMs/VLMs**: I've designed multimodal RAG pipelines, fine-tuned large language models, and built AI agents for various applications.
+* **MLOps**: I have experience building end-to-end MLOps pipelines with CI/CD, using tools like Docker, GitHub Actions, Azure Databricks, and MLflow.
+* **Classical Machine Learning**: I'm skilled at building and deploying classical ML models using regression, random forests, and other techniques.
+
+I'm also passionate about using my skills to solve real-world problems, as demonstrated by my work in aircraft dynamics and financial sentiment analysis. I thrive on challenges and am always eager to learn new technologies and approaches.`;
+        } else if (message.includes('experience') || message.includes('work') || message.includes('job')) {
+          response = fallbackResponses.experience;
+        } else if (message.includes('project') || message.includes('portfolio') || message.includes('built')) {
+          response = fallbackResponses.projects;
+        } else if (message.includes('education') || message.includes('degree') || message.includes('study') || message.includes('learn')) {
+          response = fallbackResponses.education;
+        } else {
+          response = fallbackResponses.default;
+        }
+
+        // Add a note that this is offline mode
+        response += " (Note: I'm currently in offline mode as I couldn't connect to the AI. Some features may be limited.)";
+
+        // Add the response after a short delay to simulate thinking
+        setTimeout(() => {
+          addMessage(response);
+        }, 500);
+      }
+
+      // For testing formatted responses
+      function testFormattedBio() {
+        const bioText = `I'm a versatile AI/ML engineer with a strong track record in developing and deploying innovative solutions. I excel in areas like:
+
+* **Generative AI and LLMs/VLMs**: I've designed multimodal RAG pipelines, fine-tuned large language models, and built AI agents for various applications.
+* **MLOps**: I have experience building end-to-end MLOps pipelines with CI/CD, using tools like Docker, GitHub Actions, Azure Databricks, and MLflow.
+* **Classical Machine Learning**: I'm skilled at building and deploying classical ML models using regression, random forests, and other techniques.
+
+I'm also passionate about using my skills to solve real-world problems, as demonstrated by my work in aircraft dynamics and financial sentiment analysis. I thrive on challenges and am always eager to learn new technologies and approaches.`;
+
+        addMessage(bioText);
+      }
+
+      // Event listeners
+      chatButton.addEventListener('click', toggleChat);
+      closeChat.addEventListener('click', toggleChat);
+      sendButton.addEventListener('click', handleSend);
+
+      chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          handleSend();
+        }
+      });
+
+      // Education section - Courses toggle
+      const coursesToggle = document.getElementById('courses-toggle');
+      const coursesContent = document.getElementById('courses-content');
+      const coursesChevron = document.getElementById('courses-chevron');
+      let coursesExpanded = false;
+
+      if (coursesToggle) {
+        coursesToggle.addEventListener('click', () => {
+          coursesExpanded = !coursesExpanded;
+
+          if (coursesExpanded) {
+            coursesChevron.classList.remove('fa-chevron-right');
+            coursesChevron.classList.add('fa-chevron-down');
+            coursesContent.classList.remove('is-hidden');
+
+            // For two, column layout, we need to ensure we get the right height
+            // First, set visibility to hidden but not display:none to get proper height
+            coursesContent.style.visibility = 'hidden';
+            coursesContent.style.height = 'auto';
+
+            // Now get the height of the content with all items showing
+            const contentHeight = coursesContent.scrollHeight;
+
+            // Reset and start animation
+            coursesContent.style.visibility = '';
+            coursesContent.style.height = '0px';
+
+            // Trigger reflow
+            coursesContent.offsetHeight;
+
+            // Animate to the full height
+            coursesContent.style.height = contentHeight + 'px';
+
+            setTimeout(() => {
+              coursesContent.style.height = 'auto';
+            }, 300);
+          } else {
+            coursesChevron.classList.remove('fa-chevron-down');
+            coursesChevron.classList.add('fa-chevron-right');
+
+            // Animate the content collapse
+            const contentHeight = coursesContent.scrollHeight;
+            coursesContent.style.height = contentHeight + 'px';
+
+            // Trigger reflow
+            coursesContent.offsetHeight;
+
+            setTimeout(() => {
+              coursesContent.style.height = '0px';
+              setTimeout(() => {
+                coursesContent.classList.add('is-hidden');
+              }, 300);
+            }, 10);
+          }
+        });
+      }
+
+      // Shared toggle functionality for Experience and Education sections
+      const contentCards = document.querySelectorAll('.content-card');
+
+      if (contentCards.length > 0) {
+        contentCards.forEach(card => {
+          const cardId = card.id;
+          const detailsId = `${cardId}-details`;
+          const detailsElement = document.getElementById(detailsId);
+          const toggleElement = card.querySelector('.card-toggle');
+          const toggleIcon = toggleElement.querySelector('.icon');
+          const cardSection = card.dataset.section; // Get section from data attribute
+
+          card.addEventListener('click', (e) => {
+            // Don't toggle if clicking on a tag or a link
+            if (e.target.tagName === 'A' || e.target.closest('.tags')) {
+              return;
+            }
+
+            const isActive = detailsElement.classList.contains('is-active');
+
+            // Close all other cards in the same section
+            document.querySelectorAll('.card-details').forEach(el => {
+              if (el.id !== detailsId) {
+                el.classList.remove('is-active');
+              }
+            });
+
+            document.querySelectorAll('.card-toggle').forEach(el => {
+              if (el !== toggleElement) {
+                el.classList.remove('is-active');
+              }
+            });
+
+
+            // Toggle this card
+            detailsElement.classList.toggle('is-active');
+            toggleElement.classList.toggle('is-active');
+
+            // Toggle active state on the card itself (fallback for browsers that don't support :has())
+            if (!isActive) {
+              card.classList.add('card-active');
+            } else {
+              card.classList.remove('card-active');
+            }
+          });
+        });
+      }
+
+      // Skills section mobile toggle functionality
+      const skillToggles = document.querySelectorAll('.skill-toggle');
+
+      // Function to check if "More" button should be shown
+      function checkMoreButtonVisibility() {
+        skillToggles.forEach(toggle => {
+          const target = toggle.dataset.target;
+          const skillCard = document.querySelector(`[data-skill="${target}"]`);
+          if (!skillCard) return; // Skip if skill card doesn't exist
+
+          const previewIcons = skillCard.querySelector('.skill-icons-preview');
+          const fullIcons = skillCard.querySelector('.skill-icons-full');
+          const toggleContainer = toggle.closest('.skill-toggle-container');
+
+          if (!previewIcons || !fullIcons || !toggleContainer) return;
+
+          // Count visible skills in preview vs full
+          const previewCount = previewIcons.querySelectorAll('.skill-item').length;
+          const fullCount = fullIcons.querySelectorAll('.skill-item').length;
+
+          // On mobile, show button only if there are more skills in full than preview
+          if (window.innerWidth <= 768) {
+            if (fullCount > previewCount) {
+              toggleContainer.style.display = 'block';
+            } else {
+              toggleContainer.style.display = 'none';
+            }
+          }
+        });
+      }
+
+      // Check on load and resize
+      checkMoreButtonVisibility();
+      window.addEventListener('resize', checkMoreButtonVisibility);
+
+      skillToggles.forEach(toggle => {
+        toggle.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const target = toggle.dataset.target;
+          const skillCard = document.querySelector(`[data-skill="${target}"]`);
+          const previewIcons = skillCard.querySelector('.skill-icons-preview');
+          const fullIcons = skillCard.querySelector('.skill-icons-full');
+          const isActive = toggle.classList.contains('is-active');
+
+          if (isActive) {
+            // Collapse
+            toggle.classList.remove('is-active');
+            previewIcons.classList.remove('is-hidden');
+            fullIcons.classList.remove('is-active');
+          } else {
+            // Expand
+            toggle.classList.add('is-active');
+            previewIcons.classList.add('is-hidden');
+            fullIcons.classList.add('is-active');
+          }
+        });
+      });
+    });
+  </script>
 </body>
 
 </html>

@@ -116,11 +116,11 @@
     }
 
     /* Add extra space between different message types */
-    .user-message + .bot-message {
+    .user-message+.bot-message {
       margin-top: 5px;
     }
 
-    .bot-message + .user-message {
+    .bot-message+.user-message {
       margin-top: 5px;
     }
 
@@ -375,6 +375,7 @@
       0% {
         transform: translateX(0);
       }
+
       100% {
         transform: translateX(-50%);
       }
@@ -721,9 +722,11 @@
 
     /* Mobile skills section styling */
     @media screen and (max-width: 768px) {
+
       /* CSS Variables for easy speed and length customization */
       :root {
-        --marquee-base-speed: 1.6s; /* Base time per item */
+        --marquee-base-speed: 1.6s;
+        /* Base time per item */
         --programming-items: 5;
         --tools-items: 13;
         --cloud-items: 5;
@@ -897,6 +900,27 @@
         display: none !important;
       }
     }
+
+    .video-container {
+      width: 100%;
+      max-width: 100%;
+      margin: 0 auto 1.5rem;
+      text-align: center;
+    }
+
+    .project-video {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (max-width: 768px) {
+      .video-container {
+        margin-bottom: 1rem;
+      }
+    }
   </style>
 </head>
 
@@ -1025,7 +1049,7 @@
             style="height: 300px; display: flex; flex-direction: column;">
             <p class="title is-5" style="margin-bottom: 1rem;">RAG-Powered Web Q&A Bot</p>
             <figure class="image" style="flex: 1;">
-              <img src="img/project-1-cover.png" style="width: 100%; height: 100%; object-fit: cover;">
+              <img src="img/RAG-cover-1.png" style="width: 100%; height: 100%; object-fit: cover;">
             </figure>
           </article>
         </div>
@@ -1034,7 +1058,7 @@
             style="height: 300px; display: flex; flex-direction: column;">
             <p class="title is-5" style="margin-bottom: 1rem;">Text Summarizer Microservice</p>
             <figure class="image" style="flex: 1;">
-              <img src="img/project-2-cover.png" style="width: 100%; height: 100%; object-fit: cover;">
+              <img src="img/Text-Summarization-NLP.png" style="width: 100%; height: 100%; object-fit: cover;">
             </figure>
           </article>
         </div>
@@ -1043,7 +1067,7 @@
             style="height: 300px; display: flex; flex-direction: column;">
             <p class="title is-5" style="margin-bottom: 1rem;">LLM-Enhanced Algorithmic Trading System</p>
             <figure class="image" style="flex: 1;">
-              <img src="img/project-3-cover.png" style="width: 100%; height: 100%; object-fit: cover;">
+              <img src="img/algoTrading.png" style="width: 100%; height: 100%; object-fit: cover;">
             </figure>
           </article>
         </div>
@@ -1052,7 +1076,7 @@
             style="height: 300px; display: flex; flex-direction: column;">
             <p class="title is-5" style="margin-bottom: 1rem;">Image & Video Deblurring</p>
             <figure class="image" style="flex: 1;">
-              <img src="img/project-4-cover.png" style="width: 100%; height: 100%; object-fit: cover;">
+              <img src="img/deblur.png" style="width: 100%; height: 100%; object-fit: cover;">
             </figure>
           </article>
         </div>
@@ -1061,7 +1085,7 @@
             style="height: 300px; display: flex; flex-direction: column;">
             <p class="title is-5" style="margin-bottom: 1rem;">Self-Correcting Coding Agent</p>
             <figure class="image" style="flex: 1;">
-              <img src="img/project-5-cover.png" style="width: 100%; height: 100%; object-fit: cover;">
+              <img src="img/vibeCode.png" style="width: 100%; height: 100%; object-fit: cover;">
             </figure>
           </article>
         </div>
@@ -1719,17 +1743,12 @@
       </header>
       <section class="modal-card-body">
 
-        <!-- <div id="project-1-modal-carousel" class="carousel">
-          <figure class="image is-4by3 carousel-cell">
-            <img src="img/carousel/1.png">
-          </figure>
-          <figure class="image is-4by3 carousel-cell">
-            <img src="img/carousel/2.png">
-          </figure>
-          <figure class="image is-4by3 carousel-cell">
-            <img src="img/carousel/3.png">
-          </figure>
-        </div> -->
+        <div class="video-container">
+          <video controls class="project-video">
+            <source src="img/RAG/RAG.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
 
         <div class="content">
           ,<ul>
@@ -1754,12 +1773,13 @@
           </ul>
 
           <div class="tags">
-            <span class="tag">langchain</span>
+            <span class="tag">Langchain</span>
             <span class="tag">FastAPI</span>
             <span class="tag">OCR</span>
-            <span class="tag">docling</span>
-            <span class="tag">docker</span>
-            <span class="tag">streamlit</span>
+            <span class="tag">Docling</span>
+            <span class="tag">Docker</span>
+            <span class="tag">Streamlit</span>
+            <span class="tag">GCP</span>
           </div>
 
           <div class="project-links-container">
@@ -1769,12 +1789,12 @@
               </span>
               <span>Source Code</span>
             </a>
-            <a href="#" class="project-link" target="_blank">
+            <!-- <a href="#" class="project-link" target="_blank">
               <span class="icon">
                 <i class="fas fa-external-link-alt"></i>
               </span>
               <span>Live Demo</span>
-            </a>
+            </a> -->
           </div>
         </div>
 
@@ -1796,13 +1816,7 @@
 
         <!-- <div id="project-2-modal-carousel" class="carousel">
           <figure class="image is-4by3 carousel-cell">
-            <img src="img/carousel/1.png">
-          </figure>
-          <figure class="image is-4by3 carousel-cell">
-            <img src="img/carousel/2.png">
-          </figure>
-          <figure class="image is-4by3 carousel-cell">
-            <img src="img/carousel/3.png">
+            <img src="img/RAG/RAG.mp4">
           </figure>
         </div> -->
 
@@ -1832,11 +1846,12 @@
           </ul>
 
           <div class="tags">
-            <span class="tag">text summarization</span>
-            <span class="tag">llm fine-tuning</span>
-            <span class="tag">microservice</span>
+            <span class="tag">Text Summarization</span>
+            <span class="tag">LLM fine-tuning</span>
+            <span class="tag">Microservice</span>
             <span class="tag">RESTful</span>
-            <span class="tag">docker</span>
+            <span class="tag">Docker</span>
+            <span class="tag">Azure</span>
 
           </div>
 
@@ -1912,28 +1927,28 @@
           </ul>
 
           <div class="tags">
-            <span class="tag">sentiment analysis</span>
-            <span class="tag">dataset curation</span>
-            <span class="tag">feature engineering</span>
-            <span class="tag">time series analysis</span>
-            <span class="tag">auto ML</span>
+            <span class="tag">Sentiment Analysis</span>
+            <span class="tag">Dataset</span>
+            <span class="tag">Feature Engineering</span>
+            <span class="tag">Time Series Analysis</span>
+            <span class="tag">EDA</span>
             <span class="tag">BERT encoder</span>
-            <span class="tag">BERT encoder</span>
+            <span class="tag">Auto ML</span>
           </div>
 
           <div class="project-links-container">
-            <a href="https://github.com/manish-kotra/project-3" class="project-link" target="_blank">
+            <a href="https://github.com/manish-kotra/Algorithmic-Trading" class="project-link" target="_blank">
               <span class="icon">
                 <i class="fab fa-github"></i>
               </span>
               <span>Source Code</span>
             </a>
-            <a href="#" class="project-link" target="_blank">
+            <!-- <a href="#" class="project-link" target="_blank">
               <span class="icon">
                 <i class="fas fa-external-link-alt"></i>
               </span>
               <span>Live Demo</span>
-            </a>
+            </a> -->
           </div>
         </div>
 
@@ -1952,18 +1967,22 @@
         <button class="delete" aria-label="close"></button>
       </header>
       <section class="modal-card-body">
-        <!-- <div id="project-4-modal-carousel" class="carousel">
+        <div id="project-4-modal-carousel" class="carousel">
           <figure class="image is-4by3 carousel-cell">
-            <img src="img/carousel/1.png">
+            <img src="img/CNNs/NeatNetV1.png">
           </figure>
-        </div> -->
+          <figure class="image is-4by3 carousel-cell">
+            <img src="img/CNNs/NeatNetV2.png">
+          </figure>
+        </div>
 
         <div class="content">
           <ul>
             <li>
-              <strong>Model Architecture:</strong> Designed a compact CNN-based Nested-ResNet architecture (<9M
-                parameters) in PyTorch, outperforming DeblurGAN-V2 (60M) by 1.2 dB in PSNR through extensive literature
-                review and custom design. </li>
+              <strong>Model Architecture:</strong> Designed a compact CNN-based Nested-ResNet architecture (&lt9M
+              parameters) in PyTorch, outperforming DeblurGAN-V2 (60M) by 1.2 dB in PSNR through extensive literature
+              review and custom design.
+            </li>
             <li>
               <strong>Adversarial Training Optimization:</strong> Implemented a layer-wise adversarial training scheme
               to enhance perceptual quality and robustness of deblurring performance across diverse image types.
@@ -1981,25 +2000,26 @@
 
           <div class="tags">
             <span class="tag">CNNs</span>
-            <span class="tag">diffusion</span>
-            <span class="tag">distributed training</span>
-            <span class="tag">deep learning</span>
+            <span class="tag">PyTorch</span>
+            <span class="tag">Diffusion</span>
+            <span class="tag">Distributed Training</span>
+            <span class="tag">Deep Learning</span>
           </div>
 
-          <div class="project-links-container">
+          <!-- <div class="project-links-container">
             <a href="https://github.com/manish-kotra/project-4" class="project-link" target="_blank">
               <span class="icon">
                 <i class="fab fa-github"></i>
               </span>
               <span>Source Code</span>
             </a>
-            <!-- <a href="#" class="project-link" target="_blank">
+            <a href="#" class="project-link" target="_blank">
               <span class="icon">
                 <i class="fas fa-external-link-alt"></i>
               </span>
               <span>Live Demo</span>
-            </a> -->
-          </div>
+            </a>
+          </div> -->
         </div>
       </section>
       <footer class="modal-card-foot">
@@ -2042,9 +2062,9 @@
           </ul>
 
           <div class="tags">
-            <span class="tag">langgraph</span>
-            <span class="tag">multi-agent</span>
-            <span class="tag">sandbox</span>
+            <span class="tag">LangGraph</span>
+            <span class="tag">Multi-Agent</span>
+            <span class="tag">Sandbox</span>
             <span class="tag">RAG</span>
           </div>
 
@@ -2060,8 +2080,8 @@
                 <i class="fas fa-external-link-alt"></i>
               </span>
               <span>Live Demo</span>
-            </a> -->
-        </div>
+            </a>
+        </div> -->
     </div>
     </section>
     <footer class="modal-card-foot">
@@ -2070,51 +2090,6 @@
   </div>
   </div>
 
-  <div id="project-6-modal" class="modal">
-    <div class="modal-background"></div>
-    <div class="modal-card">
-      <header class="modal-card-head">
-        <p class="modal-card-title">Project title</p>
-        <button class="delete" aria-label="close"></button>
-      </header>
-      <section class="modal-card-body">
-        <div id="project-6-modal-carousel" class="carousel">
-          <figure class="image is-4by3 carousel-cell">
-            <img src="img/carousel/3.png">
-          </figure>
-        </div>
-
-        <div class="content">
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            consequat.</p>
-
-          <div class="tags">
-            <span class="tag">django</span>
-            <span class="tag">python</span>
-            <span class="tag">postgresql</span>
-          </div>
-
-          <div class="project-links-container">
-            <a href="https://github.com/manish-kotra/project-6" class="project-link" target="_blank">
-              <span class="icon">
-                <i class="fab fa-github"></i>
-              </span>
-              <span>Source Code</span>
-            </a>
-            <a href="#" class="project-link" target="_blank">
-              <span class="icon">
-                <i class="fas fa-external-link-alt"></i>
-              </span>
-              <span>Live Demo</span>
-            </a>
-          </div>
-        </div>
-      </section>
-      <footer class="modal-card-foot">
-        <button class="button is-success">Close</button>
-      </footer>
-    </div>
-  </div>
 
   <footer class="footer">
     <div class="content has-text-centered">
@@ -2129,7 +2104,7 @@
   <div class="chat-popup">
     <div class="chat-window" id="chat-window">
       <div class="chat-header">
-        <span>Chat with my Resume</span>
+        <span>Chatbot</span>
         <span class="close-chat" id="close-chat">&times;</span>
       </div>
       <div class="chat-messages" id="chat-messages">
@@ -2382,7 +2357,7 @@
           </div>
         `;
         chatMessages.appendChild(messageDiv);
-        
+
         if (isUser) {
           // For user messages, scroll to bottom as usual
           chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -2400,14 +2375,14 @@
           const chatWindowHeight = chatMessages.clientHeight;
           const messageTop = lastUserMessage.offsetTop;
           const messageHeight = lastUserMessage.offsetHeight;
-          
+
           // Calculate scroll position to center the user's message
           const targetScrollTop = messageTop - (chatWindowHeight / 2) + (messageHeight / 2);
-          
+
           // Ensure we don't scroll beyond the boundaries
           const maxScrollTop = chatMessages.scrollHeight - chatWindowHeight;
           const finalScrollTop = Math.max(0, Math.min(targetScrollTop, maxScrollTop));
-          
+
           chatMessages.scrollTop = finalScrollTop;
         } else {
           // If no user messages, scroll to bottom as fallback

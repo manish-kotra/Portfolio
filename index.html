@@ -880,6 +880,35 @@
       .skill-card .card-content {
         padding: 1.5rem !important;
       }
+
+      /* Make skill cards clickable on mobile */
+      .skill-card {
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        position: relative !important;
+      }
+
+      .skill-card:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+      }
+
+      .skill-card:active {
+        transform: translateY(0) !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+      }
+
+      /* Add a subtle tap indicator */
+      .skill-card::after {
+        content: '' !important;
+        position: absolute !important;
+        bottom: 10px !important;
+        right: 15px !important;
+        font-size: 0.7rem !important;
+        color: var(--color-text-light) !important;
+        opacity: 0.6 !important;
+        pointer-events: none !important;
+      }
     }
 
     /* Desktop - show all skills and hide mobile controls */
@@ -920,6 +949,108 @@
       .video-container {
         margin-bottom: 1rem;
       }
+    }
+
+    /* Mobile Skills Modal */
+    .mobile-skills-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .mobile-skills-modal.is-active {
+      display: flex;
+    }
+
+    .mobile-skills-content {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      max-width: 90%;
+      max-height: 80%;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .mobile-skills-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .mobile-skills-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0;
+      color: var(--color-text);
+    }
+
+    .mobile-skills-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--color-text-light);
+      padding: 5px;
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .mobile-skills-close:hover {
+      background-color: var(--color-border-lighter);
+      color: var(--color-text);
+    }
+
+    .mobile-skills-static {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+    }
+
+    .mobile-skills-static .skill-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 80px;
+      margin-bottom: 15px;
+    }
+
+    .mobile-skills-static .skill-item img {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      margin-bottom: 8px;
+      transition: transform 0.3s ease;
+    }
+
+    .mobile-skills-static .skill-item img:hover {
+      transform: scale(1.1);
+    }
+
+    .mobile-skills-static .skill-item span {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-text);
     }
   </style>
 </head>
@@ -1526,10 +1657,37 @@
               </div>
             </div>
           </div>
+                <div class="column is-1">
+                  <div class="skill-toggle-container mobile-only">
+                    <button class="button is-small skill-toggle" data-target="databases">
+                      <span class="icon">
+                        <i class="fas fa-chevron-down"></i>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- Mobile Skills Modal -->
+  <div class="mobile-skills-modal" id="mobileSkillsModal">
+    <div class="mobile-skills-content">
+      <div class="mobile-skills-header">
+        <h3 class="mobile-skills-title" id="mobileSkillsTitle">Skills</h3>
+        <button class="mobile-skills-close" id="mobileSkillsClose" type="button">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="mobile-skills-static" id="mobileSkillsContainer">
+        <!-- Skills will be populated here dynamically -->
+      </div>
+    </div>
+  </div>
 
   <section id="experience" class="section">
     <div class="container">
@@ -2743,6 +2901,82 @@ I'm also passionate about using my skills to solve real-world problems, as demon
           }
         });
       });
+
+      // Mobile skills modal functionality
+      const mobileSkillsModal = document.getElementById('mobileSkillsModal');
+      const mobileSkillsClose = document.getElementById('mobileSkillsClose');
+      const mobileSkillsTitle = document.getElementById('mobileSkillsTitle');
+      const mobileSkillsContainer = document.getElementById('mobileSkillsContainer');
+      
+      // Function to open mobile skills modal
+      function openMobileSkillsModal(skillType, skillCard) {
+        // Get the skills data from the preview icons (which contains the unique skills)
+        const previewIcons = skillCard.querySelector('.skill-icons-preview');
+        const skills = previewIcons.querySelectorAll('.skill-item');
+        
+        // Set modal title
+        const skillTitle = skillCard.querySelector('.title.is-5').textContent;
+        mobileSkillsTitle.textContent = skillTitle;
+        
+        // Clear previous content
+        mobileSkillsContainer.innerHTML = '';
+        
+        // Populate skills in static layout
+        skills.forEach(skill => {
+          const skillClone = skill.cloneNode(true);
+          mobileSkillsContainer.appendChild(skillClone);
+        });
+        
+        // Show modal
+        mobileSkillsModal.classList.add('is-active');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+      }
+      
+      // Function to close mobile skills modal
+      function closeMobileSkillsModal() {
+        mobileSkillsModal.classList.remove('is-active');
+        document.body.style.overflow = ''; // Restore scrolling
+      }
+      
+      // Add click event listeners to skill cards on mobile
+      function initMobileSkillsInteraction() {
+        const skillCards = document.querySelectorAll('.skill-card');
+        
+        skillCards.forEach(skillCard => {
+          skillCard.addEventListener('click', (e) => {
+            // Only handle clicks on mobile
+            if (window.innerWidth <= 768) {
+              // Prevent event if clicking on toggle button
+              if (e.target.closest('.skill-toggle-container')) {
+                return;
+              }
+              
+              const skillType = skillCard.getAttribute('data-skill');
+              openMobileSkillsModal(skillType, skillCard);
+            }
+          });
+        });
+      }
+      
+      // Close modal event listeners
+      mobileSkillsClose.addEventListener('click', closeMobileSkillsModal);
+      
+      // Close modal when clicking outside
+      mobileSkillsModal.addEventListener('click', (e) => {
+        if (e.target === mobileSkillsModal) {
+          closeMobileSkillsModal();
+        }
+      });
+      
+      // Close modal on escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && mobileSkillsModal.classList.contains('is-active')) {
+          closeMobileSkillsModal();
+        }
+      });
+      
+      // Initialize mobile skills interaction
+      initMobileSkillsInteraction();
     });
   </script>
 </body>

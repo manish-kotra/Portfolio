@@ -312,8 +312,8 @@
       }
 
       50% {
-        transform: scale(1.05);
-        box-shadow: 0 6px 16px var(--shadow-color);
+        transform: scale(1.08);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
       }
 
       100% {
@@ -323,7 +323,7 @@
     }
 
     .pulse {
-      animation: pulse 1s infinite;
+      animation: pulse 2s ease-in-out infinite;
     }
 
     /* Typing indicator */
@@ -799,11 +799,7 @@
         margin-bottom: 15px !important;
       }
 
-      .skill-card .column.is-8 {
-        width: 100% !important;
-        overflow: hidden !important;
-        padding: 0 !important;
-      }
+
 
       .skill-card .column.is-1 {
         display: none !important;
@@ -814,29 +810,116 @@
         display: none !important;
       }
 
+      /* Skills container wrapper for horizontal scrolling */
+      .skill-card .column.is-8 {
+        width: 100% !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        padding: 0 !important;
+        -webkit-overflow-scrolling: touch !important; /* Smooth scrolling on iOS */
+        scrollbar-width: none !important; /* Firefox */
+        -ms-overflow-style: none !important; /* IE and Edge */
+        border-radius: 8px !important;
+        position: relative !important;
+      }
+
+      /* Hide scrollbar for webkit browsers */
+      .skill-card .column.is-8::-webkit-scrollbar {
+        display: none !important;
+      }
+
+      /* Add scroll indicators */
+      .skill-card .column.is-8::before {
+        content: '' !important;
+        position: absolute !important;
+        top: 0 !important;
+        right: 0 !important;
+        width: 20px !important;
+        height: 100% !important;
+        background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.8)) !important;
+        pointer-events: none !important;
+        z-index: 1 !important;
+        opacity: 0.7 !important;
+      }
+
+      .skill-card .column.is-8::after {
+        content: '' !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 20px !important;
+        height: 100% !important;
+        background: linear-gradient(to left, transparent, rgba(255, 255, 255, 0.8)) !important;
+        pointer-events: none !important;
+        z-index: 1 !important;
+        opacity: 0.7 !important;
+      }
+
       .skill-icons-full {
         display: flex !important;
         flex-wrap: nowrap !important;
         gap: 15px !important;
         padding: 10px 15px !important;
         min-width: max-content !important;
+        transition: transform 0.3s ease !important;
+        /* Remove animation for scrollable version */
+        animation: none !important;
+        position: relative !important;
+      }
+
+      /* Add scroll hint indicator */
+      .skill-icons-full::after {
+        content: '• • •' !important;
+        position: absolute !important;
+        right: -10px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        color: rgba(74, 74, 74, 0.3) !important;
+        font-size: 8px !important;
+        letter-spacing: 2px !important;
+        animation: scroll-hint-pulse 2s ease-in-out infinite !important;
+        pointer-events: none !important;
+      }
+
+      /* Pulse animation for scroll hint */
+      @keyframes scroll-hint-pulse {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 0.8; }
+      }
+
+      /* Hide scroll hint when actively scrolling */
+      .skill-icons-full.scrollable::after {
+        display: none !important;
+      }
+
+      /* Add scrollable class for when user wants scrolling instead of marquee */
+      .skill-icons-full.scrollable {
+        animation: none !important;
+      }
+
+      /* Keep marquee animation as default, but allow override */
+      .skill-icons-full:not(.scrollable) {
+        overflow: hidden;
+      }
+
+      .skill-icons-full:not(.scrollable) > div {
         animation: marquee 20s linear infinite !important;
       }
 
-      /* Dynamic animation speeds based on content length for consistent scroll speed */
-      .skill-card[data-skill="programming"] .skill-icons-full {
+      /* Dynamic animation speeds - only apply when not scrollable */
+      .skill-card[data-skill="programming"] .skill-icons-full:not(.scrollable) > div {
         animation: marquee calc(var(--marquee-base-speed) * var(--programming-items) * 2) linear infinite !important;
       }
 
-      .skill-card[data-skill="tools"] .skill-icons-full {
+      .skill-card[data-skill="tools"] .skill-icons-full:not(.scrollable) > div {
         animation: marquee calc(var(--marquee-base-speed) * var(--tools-items) * 2) linear infinite !important;
       }
 
-      .skill-card[data-skill="cloud"] .skill-icons-full {
+      .skill-card[data-skill="cloud"] .skill-icons-full:not(.scrollable) > div {
         animation: marquee calc(var(--marquee-base-speed) * var(--cloud-items) * 2) linear infinite !important;
       }
 
-      .skill-card[data-skill="databases"] .skill-icons-full {
+      .skill-card[data-skill="databases"] .skill-icons-full:not(.scrollable) > div {
         animation: marquee calc(var(--marquee-base-speed) * var(--databases-items) * 2) linear infinite !important;
       }
 
@@ -845,18 +928,36 @@
         flex-shrink: 0 !important;
         min-width: 70px !important;
         text-align: center !important;
+        transition: transform 0.2s ease !important;
+        cursor: pointer !important;
+      }
+
+      /* Add hover effect to indicate interactivity */
+      .skill-item:hover {
+        transform: translateY(-2px) !important;
       }
 
       .skill-item img {
         width: 40px !important;
         height: 40px !important;
         margin-bottom: 5px !important;
+        transition: transform 0.2s ease !important;
+      }
+
+      .skill-item:hover img {
+        transform: scale(1.1) !important;
       }
 
       .skill-item span {
         font-size: 0.75rem !important;
         display: block !important;
         white-space: nowrap !important;
+        color: #4a4a4a !important;
+        transition: color 0.2s ease !important;
+      }
+
+      .skill-item:hover span {
+        color: #363636 !important;
       }
 
       /* Center the skill title */
@@ -1149,27 +1250,6 @@
                       <img src="img/skills/oops.png" alt="OOPs">
                       <span>OOPs</span>
                     </div>
-                    <!-- Duplicate items for seamless loop -->
-                    <div class="skill-item">
-                      <img src="img/skills/python.png" alt="Python">
-                      <span>Python</span>
-                    </div>
-                    <div class="skill-item">
-                      <img src="img/skills/sql.png" alt="SQL">
-                      <span>SQL</span>
-                    </div>
-                    <div class="skill-item">
-                      <img src="img/skills/matlab.png" alt="MATLAB">
-                      <span>MATLAB</span>
-                    </div>
-                    <div class="skill-item">
-                      <img src="img/skills/html.png" alt="HTML">
-                      <span>HTML</span>
-                    </div>
-                    <div class="skill-item">
-                      <img src="img/skills/oops.png" alt="OOPs">
-                      <span>OOPs</span>
-                    </div>
                   </div>
                 </div>
                 <div class="column is-1">
@@ -1299,59 +1379,6 @@
                       <img src="img/skills/n8n.png" alt="n8n">
                       <span>n8n</span>
                     </div>
-                    <!-- Duplicate items for seamless loop -->
-                    <div class="skill-item">
-                      <img src="img/skills/pytorch.png" alt="PyTorch">
-                      <span>PyTorch</span>
-                    </div>
-                    <div class="skill-item">
-                      <img src="img/skills/huggingface.png" alt="Hugging Face">
-                      <span>Hugging Face</span>
-                    </div>
-                    <div class="skill-item">
-                      <img src="img/skills/docker.png" alt="Docker">
-                      <span>Docker</span>
-                    </div>
-                    <div class="skill-item">
-                      <img src="img/skills/scikit.png" alt="Scikit-Learn">
-                      <span>Scikit-Learn</span>
-                    </div>
-                    <div class="skill-item">
-                      <img src="img/skills/git.png" alt="Git">
-                      <span>Git</span>
-                    </div>
-                    <div class="skill-item">
-                      <img src="img/skills/langchain.png" alt="LangChain">
-                      <span>LangChain</span>
-                    </div>
-                    <div class="skill-item">
-                      <img src="img/skills/langgraph.png" alt="LangGraph">
-                      <span>LangGraph</span>
-                    </div>
-                    <div class="skill-item">
-                      <img src="img/skills/mcp.png" alt="MCP">
-                      <span>MCP</span>
-                    </div>
-                    <div class="skill-item">
-                      <img src="img/skills/mlflow.png" alt="MLflow">
-                      <span>MLflow</span>
-                    </div>
-                    <div class="skill-item">
-                      <img src="img/skills/fastapi.png" alt="FastAPI">
-                      <span>FastAPI</span>
-                    </div>
-                    <div class="skill-item">
-                      <img src="img/skills/streamlit.png" alt="Streamlit">
-                      <span>Streamlit</span>
-                    </div>
-                    <div class="skill-item">
-                      <img src="img/skills/apachespark.png" alt="Apache Spark">
-                      <span>Apache Spark</span>
-                    </div>
-                    <div class="skill-item">
-                      <img src="img/skills/n8n.png" alt="n8n">
-                      <span>n8n</span>
-                    </div>
                   </div>
                 </div>
                 <div class="column is-1">
@@ -1417,27 +1444,6 @@
                       <img src="img/skills/e2b.png" alt="E2B">
                       <span>E2B</span>
                     </div>
-                    <!-- Duplicate items for seamless loop -->
-                    <div class="skill-item">
-                      <img src="img/skills/azure.png" alt="Azure">
-                      <span>Azure</span>
-                    </div>
-                    <div class="skill-item">
-                      <img src="img/skills/aws.png" alt="AWS">
-                      <span>AWS</span>
-                    </div>
-                    <div class="skill-item">
-                      <img src="img/skills/gcp.png" alt="GCP">
-                      <span>GCP</span>
-                    </div>
-                    <div class="skill-item">
-                      <img src="img/skills/dbrx.png" alt="Databricks">
-                      <span>Databricks</span>
-                    </div>
-                    <div class="skill-item">
-                      <img src="img/skills/e2b.png" alt="E2B">
-                      <span>E2B</span>
-                    </div>
                   </div>
                 </div>
                 <div class="column is-1">
@@ -1479,23 +1485,6 @@
                     </div>
                   </div>
                   <div class="skill-icons skill-icons-full">
-                    <div class="skill-item">
-                      <img src="img/skills/chroma.png" alt="ChromaDB">
-                      <span>Chroma</span>
-                    </div>
-                    <div class="skill-item">
-                      <img src="img/skills/qdrant.png" alt="Qdrant">
-                      <span>Qdrant</span>
-                    </div>
-                    <div class="skill-item">
-                      <img src="img/skills/mongodb.png" alt="MongoDB">
-                      <span>MongoDB</span>
-                    </div>
-                    <div class="skill-item">
-                      <img src="img/skills/mysql.png" alt="MySQL">
-                      <span>MySQL</span>
-                    </div>
-                    <!-- Duplicate items for seamless loop -->
                     <div class="skill-item">
                       <img src="img/skills/chroma.png" alt="ChromaDB">
                       <span>Chroma</span>
@@ -2742,6 +2731,256 @@ I'm also passionate about using my skills to solve real-world problems, as demon
             fullIcons.classList.add('is-active');
           }
         });
+      });
+
+      // Enhanced horizontal scrolling for skills section on mobile
+      function initializeSkillsScrolling() {
+        const skillContainers = document.querySelectorAll('.skill-card .column.is-8');
+        
+        skillContainers.forEach(container => {
+          const skillIcons = container.querySelector('.skill-icons-full');
+          if (!skillIcons) return;
+
+          let isScrolling = false;
+          let isUserInteracting = false;
+          let startX, startScrollLeft;
+          let momentum = 0;
+          let lastMoveTime = 0;
+          let animationId;
+          let inactivityTimer;
+          let originalContent = null;
+
+          // Store original content once
+          if (!originalContent) {
+            originalContent = skillIcons.innerHTML;
+          }
+
+          // Create infinite marquee content by duplicating items
+          function createMarqueeContent() {
+            const items = skillIcons.querySelectorAll('.skill-item');
+            if (items.length === 0) return;
+            
+            // Clear existing content
+            skillIcons.innerHTML = '';
+            
+            // Create a wrapper for seamless scrolling that contains exactly two copies
+            const marqueeWrapper = document.createElement('div');
+            marqueeWrapper.style.display = 'flex';
+            marqueeWrapper.style.width = '200%'; // Exactly double width
+            marqueeWrapper.style.gap = '0'; // No gap between the two copies
+            
+            // Add first copy
+            const firstCopy = document.createElement('div');
+            firstCopy.style.display = 'flex';
+            firstCopy.style.width = '50%'; // Each copy takes exactly half
+            firstCopy.style.gap = '15px';
+            firstCopy.style.paddingRight = '15px'; // Add padding to maintain spacing
+            firstCopy.innerHTML = originalContent;
+            
+            // Add second copy (identical to first)
+            const secondCopy = document.createElement('div');
+            secondCopy.style.display = 'flex';
+            secondCopy.style.width = '50%'; // Each copy takes exactly half
+            secondCopy.style.gap = '15px';
+            secondCopy.innerHTML = originalContent;
+            
+            marqueeWrapper.appendChild(firstCopy);
+            marqueeWrapper.appendChild(secondCopy);
+            
+            skillIcons.appendChild(marqueeWrapper);
+          }
+
+          // Restore original content for manual scrolling
+          function restoreOriginalContent() {
+            skillIcons.innerHTML = originalContent;
+          }
+
+          // Disable marquee animation on touch/mouse interaction
+          function disableMarquee() {
+            clearTimeout(inactivityTimer);
+            isUserInteracting = true;
+            skillIcons.classList.add('scrollable');
+            
+            // Clear animations on both container and any child wrapper
+            skillIcons.style.animation = 'none';
+            skillIcons.style.transform = 'none';
+            const wrapper = skillIcons.querySelector('div');
+            if (wrapper) {
+              wrapper.style.animation = 'none';
+              wrapper.style.transform = 'none';
+            }
+            
+            restoreOriginalContent();
+          }
+
+          // Re-enable marquee animation after inactivity
+          function enableMarqueeAfterDelay() {
+            clearTimeout(inactivityTimer);
+            inactivityTimer = setTimeout(() => {
+              if (!isScrolling && !isUserInteracting) {
+                // Reset scroll position to start for seamless marquee
+                container.scrollLeft = 0;
+                
+                // Small delay to ensure scroll position is reset
+                setTimeout(() => {
+                  createMarqueeContent();
+                  skillIcons.classList.remove('scrollable');
+                  
+                  // Clear inline styles to allow CSS animations to take effect
+                  skillIcons.style.animation = '';
+                  skillIcons.style.transform = '';
+                  const wrapper = skillIcons.querySelector('div');
+                  if (wrapper) {
+                    wrapper.style.animation = '';
+                    wrapper.style.transform = '';
+                  }
+                  
+                  isUserInteracting = false;
+                }, 50);
+              }
+            }, 2000); // Re-enable after 2 seconds of inactivity
+          }
+
+          // Initialize with marquee content
+          createMarqueeContent();
+
+          // Mouse events
+          container.addEventListener('mousedown', (e) => {
+            isScrolling = true;
+            isUserInteracting = true;
+            startX = e.pageX - container.offsetLeft;
+            startScrollLeft = container.scrollLeft;
+            disableMarquee();
+            container.style.cursor = 'grabbing';
+            e.preventDefault();
+          });
+
+          container.addEventListener('mousemove', (e) => {
+            if (!isScrolling) return;
+            e.preventDefault();
+            const x = e.pageX - container.offsetLeft;
+            const walk = (x - startX) * 2; // Multiply by 2 for faster scrolling
+            container.scrollLeft = startScrollLeft - walk;
+            
+            // Calculate momentum
+            const currentTime = Date.now();
+            if (currentTime - lastMoveTime > 0) {
+              momentum = walk / (currentTime - lastMoveTime);
+            }
+            lastMoveTime = currentTime;
+          });
+
+          container.addEventListener('mouseup', () => {
+            isScrolling = false;
+            container.style.cursor = 'grab';
+            applyMomentum();
+            // Start inactivity timer
+            setTimeout(() => {
+              isUserInteracting = false;
+              enableMarqueeAfterDelay();
+            }, 100);
+          });
+
+          container.addEventListener('mouseleave', () => {
+            isScrolling = false;
+            container.style.cursor = 'grab';
+            // Start inactivity timer
+            setTimeout(() => {
+              isUserInteracting = false;
+              enableMarqueeAfterDelay();
+            }, 100);
+          });
+
+          // Touch events
+          container.addEventListener('touchstart', (e) => {
+            isScrolling = true;
+            isUserInteracting = true;
+            startX = e.touches[0].clientX;
+            startScrollLeft = container.scrollLeft;
+            disableMarquee();
+          }, { passive: true });
+
+          container.addEventListener('touchmove', (e) => {
+            if (!isScrolling) return;
+            const x = e.touches[0].clientX;
+            const walk = (x - startX) * 1.5; // Slightly faster scrolling
+            container.scrollLeft = startScrollLeft - walk;
+            
+            // Calculate momentum
+            const currentTime = Date.now();
+            if (currentTime - lastMoveTime > 0) {
+              momentum = walk / (currentTime - lastMoveTime);
+            }
+            lastMoveTime = currentTime;
+          }, { passive: true });
+
+          container.addEventListener('touchend', () => {
+            isScrolling = false;
+            applyMomentum();
+            // Start inactivity timer
+            setTimeout(() => {
+              isUserInteracting = false;
+              enableMarqueeAfterDelay();
+            }, 100);
+          });
+
+          // Apply momentum scrolling
+          function applyMomentum() {
+            if (Math.abs(momentum) < 0.1) return;
+            
+            function animate() {
+              container.scrollLeft -= momentum * 10;
+              momentum *= 0.95; // Friction
+              
+              if (Math.abs(momentum) > 0.1) {
+                animationId = requestAnimationFrame(animate);
+              } else {
+                // Momentum finished, start inactivity timer
+                setTimeout(() => {
+                  if (!isScrolling && !isUserInteracting) {
+                    enableMarqueeAfterDelay();
+                  }
+                }, 500);
+              }
+            }
+            
+            if (animationId) cancelAnimationFrame(animationId);
+            animationId = requestAnimationFrame(animate);
+          }
+
+          // Handle scroll events (including programmatic scrolling)
+          container.addEventListener('scroll', () => {
+            if (!isUserInteracting) return; // Only respond to user-initiated scrolling
+            disableMarquee();
+          });
+
+          // Set initial cursor style
+          container.style.cursor = 'grab';
+          
+          // Add visual feedback
+          container.addEventListener('mouseenter', () => {
+            if (!isScrolling) {
+              container.style.cursor = 'grab';
+            }
+          });
+
+          // Prevent text selection while dragging
+          container.addEventListener('selectstart', (e) => {
+            if (isScrolling) e.preventDefault();
+          });
+        });
+      }
+
+      // Initialize skills scrolling on mobile
+      if (window.innerWidth <= 768) {
+        initializeSkillsScrolling();
+      }
+
+      // Reinitialize on window resize
+      window.addEventListener('resize', () => {
+        if (window.innerWidth <= 768) {
+          initializeSkillsScrolling();
+        }
       });
     });
   </script>

@@ -111,8 +111,17 @@
     }
 
     .message {
-      margin-bottom: 10px;
+      margin-bottom: 20px;
       clear: both;
+    }
+
+    /* Add extra space between different message types */
+    .user-message + .bot-message {
+      margin-top: 5px;
+    }
+
+    .bot-message + .user-message {
+      margin-top: 5px;
     }
 
     .user-message .message-content {
@@ -122,6 +131,7 @@
       border-radius: 15px 15px 0 15px;
       padding: 8px 15px;
       max-width: 70%;
+      margin-bottom: 8px;
     }
 
     .bot-message .message-content {
@@ -131,6 +141,7 @@
       border-radius: 15px 15px 15px 0;
       padding: 8px 15px;
       max-width: 70%;
+      margin-bottom: 8px;
     }
 
     /* Enhanced styling for formatted bot messages */
@@ -231,6 +242,7 @@
       flex: 1;
       overflow-y: auto;
       padding: 15px;
+      background-color: white;
     }
 
     .chat-input-container {
@@ -359,11 +371,25 @@
       }
     }
 
+    @keyframes marquee {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
     /* Skills section styling */
     .skill-icons {
       display: flex;
       flex-wrap: wrap;
       gap: 20px;
+    }
+
+    /* Desktop view - hide full version with duplicated items, show only preview */
+    .skill-icons-full {
+      display: none !important;
     }
 
     .skill-item {
@@ -695,6 +721,15 @@
 
     /* Mobile skills section styling */
     @media screen and (max-width: 768px) {
+      /* CSS Variables for easy speed and length customization */
+      :root {
+        --marquee-base-speed: 1.6s; /* Base time per item */
+        --programming-items: 5;
+        --tools-items: 13;
+        --cloud-items: 5;
+        --databases-items: 4;
+      }
+
       .mobile-only {
         display: block !important;
       }
@@ -703,34 +738,144 @@
         display: none !important;
       }
 
-      .skill-toggle {
-        background: transparent;
-        border: none;
-        color: var(--color-text-light);
-        cursor: pointer;
-        transition: all 0.2s ease;
-      }
-
-      .skill-toggle:hover {
-        color: var(--color-accent);
-      }
-
-      .skill-toggle.is-active .icon {
-        transform: rotate(180deg);
-      }
-
-      .skill-icons-full.is-active {
-        display: flex !important;
-      }
-
-      .skill-icons-preview.is-hidden {
+      /* Hide GitHub and LinkedIn links from mobile hamburger menu */
+      .navbar-end {
         display: none !important;
       }
 
+      /* Project cards mobile fixes */
+      #projects .columns.is-multiline {
+        margin: 0 !important;
+      }
+
+      #projects .column.is-4 {
+        padding: 0.5rem !important;
+      }
+
+      #projects .notification {
+        height: 250px !important;
+        margin-bottom: 1rem !important;
+        padding: 1rem !important;
+        border-radius: 8px !important;
+        overflow: hidden !important;
+      }
+
+      #projects .notification .title.is-5 {
+        font-size: 1rem !important;
+        margin-bottom: 0.5rem !important;
+        line-height: 1.2 !important;
+      }
+
+      #projects .notification .image {
+        border-radius: 4px !important;
+        overflow: hidden !important;
+      }
+
+      #projects .notification .image img {
+        border-radius: 4px !important;
+        object-fit: cover !important;
+        width: 100% !important;
+        height: 100% !important;
+      }
+
+      /* Hide toggle buttons and containers on mobile */
+      .skill-toggle,
       .skill-toggle-container {
-        text-align: center;
-        width: 100%;
-        margin-top: 10px;
+        display: none !important;
+      }
+
+      /* Restructure skill cards for mobile */
+      .skill-card .columns.is-vcentered {
+        flex-direction: column !important;
+        align-items: center !important;
+      }
+
+      .skill-card .column.is-3 {
+        width: 100% !important;
+        text-align: center !important;
+        margin-bottom: 15px !important;
+      }
+
+      .skill-card .column.is-8 {
+        width: 100% !important;
+        overflow: hidden !important;
+        padding: 0 !important;
+      }
+
+      .skill-card .column.is-1 {
+        display: none !important;
+      }
+
+      /* Show skill-icons-full on mobile, hide preview */
+      .skill-icons-preview {
+        display: none !important;
+      }
+
+      .skill-icons-full {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        gap: 15px !important;
+        padding: 10px 15px !important;
+        min-width: max-content !important;
+        animation: marquee 20s linear infinite !important;
+      }
+
+      /* Dynamic animation speeds based on content length for consistent scroll speed */
+      .skill-card[data-skill="programming"] .skill-icons-full {
+        animation: marquee calc(var(--marquee-base-speed) * var(--programming-items) * 2) linear infinite !important;
+      }
+
+      .skill-card[data-skill="tools"] .skill-icons-full {
+        animation: marquee calc(var(--marquee-base-speed) * var(--tools-items) * 2) linear infinite !important;
+      }
+
+      .skill-card[data-skill="cloud"] .skill-icons-full {
+        animation: marquee calc(var(--marquee-base-speed) * var(--cloud-items) * 2) linear infinite !important;
+      }
+
+      .skill-card[data-skill="databases"] .skill-icons-full {
+        animation: marquee calc(var(--marquee-base-speed) * var(--databases-items) * 2) linear infinite !important;
+      }
+
+      /* Skill item styling for horizontal scroll */
+      .skill-item {
+        flex-shrink: 0 !important;
+        min-width: 70px !important;
+        text-align: center !important;
+      }
+
+      .skill-item img {
+        width: 40px !important;
+        height: 40px !important;
+        margin-bottom: 5px !important;
+      }
+
+      .skill-item span {
+        font-size: 0.75rem !important;
+        display: block !important;
+        white-space: nowrap !important;
+      }
+
+      /* Center the skill title */
+      .skill-card .title.is-5 {
+        text-align: center !important;
+        margin-bottom: 0 !important;
+        font-size: 1.1rem !important;
+      }
+
+      /* Ensure proper spacing for skills section on mobile */
+      #skills .section {
+        padding-top: 4rem !important;
+        padding-bottom: 3rem !important;
+      }
+
+      /* Maintain card spacing in mobile */
+      .skill-card {
+        margin-bottom: 1.5rem !important;
+      }
+
+      .skill-card .card-content {
+        padding: 1.5rem !important;
       }
     }
 
@@ -745,11 +890,11 @@
       }
 
       .skill-icons-preview {
-        display: none !important;
+        display: flex !important;
       }
 
       .skill-icons-full {
-        display: flex !important;
+        display: none !important;
       }
     }
   </style>
@@ -950,16 +1095,37 @@
                       <img src="img/skills/matlab.png" alt="MATLAB">
                       <span>MATLAB</span>
                     </div>
-                    <!-- <div class="skill-item">
+                    <div class="skill-item">
                       <img src="img/skills/html.png" alt="HTML">
                       <span>HTML</span>
                     </div>
-                    <div class="skill-item mobile-hidden">
+                    <div class="skill-item">
                       <img src="img/skills/oops.png" alt="OOPs">
                       <span>OOPs</span>
-                    </div> -->
+                    </div>
                   </div>
-                  <div class="skill-icons skill-icons-full" style="display: none;">
+                  <div class="skill-icons skill-icons-full">
+                    <div class="skill-item">
+                      <img src="img/skills/python.png" alt="Python">
+                      <span>Python</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/sql.png" alt="SQL">
+                      <span>SQL</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/matlab.png" alt="MATLAB">
+                      <span>MATLAB</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/html.png" alt="HTML">
+                      <span>HTML</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/oops.png" alt="OOPs">
+                      <span>OOPs</span>
+                    </div>
+                    <!-- Duplicate items for seamless loop -->
                     <div class="skill-item">
                       <img src="img/skills/python.png" alt="Python">
                       <span>Python</span>
@@ -1015,12 +1181,101 @@
                       <img src="img/skills/docker.png" alt="Docker">
                       <span>Docker</span>
                     </div>
-                    <!-- <div class="skill-item">
+                    <div class="skill-item">
                       <img src="img/skills/scikit.png" alt="Scikit-Learn">
                       <span>Scikit-Learn</span>
-                    </div> -->
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/git.png" alt="Git">
+                      <span>Git</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/langchain.png" alt="LangChain">
+                      <span>LangChain</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/langgraph.png" alt="LangGraph">
+                      <span>LangGraph</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/mcp.png" alt="MCP">
+                      <span>MCP</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/mlflow.png" alt="MLflow">
+                      <span>MLflow</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/fastapi.png" alt="FastAPI">
+                      <span>FastAPI</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/streamlit.png" alt="Streamlit">
+                      <span>Streamlit</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/apachespark.png" alt="Apache Spark">
+                      <span>Apache Spark</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/n8n.png" alt="n8n">
+                      <span>n8n</span>
+                    </div>
                   </div>
-                  <div class="skill-icons skill-icons-full" style="display: none;">
+                  <div class="skill-icons skill-icons-full">
+                    <div class="skill-item">
+                      <img src="img/skills/pytorch.png" alt="PyTorch">
+                      <span>PyTorch</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/huggingface.png" alt="Hugging Face">
+                      <span>Hugging Face</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/docker.png" alt="Docker">
+                      <span>Docker</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/scikit.png" alt="Scikit-Learn">
+                      <span>Scikit-Learn</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/git.png" alt="Git">
+                      <span>Git</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/langchain.png" alt="LangChain">
+                      <span>LangChain</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/langgraph.png" alt="LangGraph">
+                      <span>LangGraph</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/mcp.png" alt="MCP">
+                      <span>MCP</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/mlflow.png" alt="MLflow">
+                      <span>MLflow</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/fastapi.png" alt="FastAPI">
+                      <span>FastAPI</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/streamlit.png" alt="Streamlit">
+                      <span>Streamlit</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/apachespark.png" alt="Apache Spark">
+                      <span>Apache Spark</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/n8n.png" alt="n8n">
+                      <span>n8n</span>
+                    </div>
+                    <!-- Duplicate items for seamless loop -->
                     <div class="skill-item">
                       <img src="img/skills/pytorch.png" alt="PyTorch">
                       <span>PyTorch</span>
@@ -1108,16 +1363,16 @@
                       <img src="img/skills/gcp.png" alt="GCP">
                       <span>GCP</span>
                     </div>
-                    <!-- <div class="skill-item">
+                    <div class="skill-item">
                       <img src="img/skills/dbrx.png" alt="Databricks">
                       <span>Databricks</span>
-                    </div> -->
-                    <div class="skill-item mobile-hidden">
+                    </div>
+                    <div class="skill-item">
                       <img src="img/skills/e2b.png" alt="E2B">
                       <span>E2B</span>
                     </div>
                   </div>
-                  <div class="skill-icons skill-icons-full" style="display: none;">
+                  <div class="skill-icons skill-icons-full">
                     <div class="skill-item">
                       <img src="img/skills/azure.png" alt="Azure">
                       <span>Azure</span>
@@ -1138,7 +1393,27 @@
                       <img src="img/skills/e2b.png" alt="E2B">
                       <span>E2B</span>
                     </div>
-
+                    <!-- Duplicate items for seamless loop -->
+                    <div class="skill-item">
+                      <img src="img/skills/azure.png" alt="Azure">
+                      <span>Azure</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/aws.png" alt="AWS">
+                      <span>AWS</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/gcp.png" alt="GCP">
+                      <span>GCP</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/dbrx.png" alt="Databricks">
+                      <span>Databricks</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/e2b.png" alt="E2B">
+                      <span>E2B</span>
+                    </div>
                   </div>
                 </div>
                 <div class="column is-1">
@@ -1174,12 +1449,29 @@
                       <img src="img/skills/mongodb.png" alt="MongoDB">
                       <span>MongoDB</span>
                     </div>
-                    <div class="skill-item mobile-hidden">
+                    <div class="skill-item">
                       <img src="img/skills/mysql.png" alt="MySQL">
                       <span>MySQL</span>
                     </div>
                   </div>
-                  <div class="skill-icons skill-icons-full" style="display: none;">
+                  <div class="skill-icons skill-icons-full">
+                    <div class="skill-item">
+                      <img src="img/skills/chroma.png" alt="ChromaDB">
+                      <span>Chroma</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/qdrant.png" alt="Qdrant">
+                      <span>Qdrant</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/mongodb.png" alt="MongoDB">
+                      <span>MongoDB</span>
+                    </div>
+                    <div class="skill-item">
+                      <img src="img/skills/mysql.png" alt="MySQL">
+                      <span>MySQL</span>
+                    </div>
+                    <!-- Duplicate items for seamless loop -->
                     <div class="skill-item">
                       <img src="img/skills/chroma.png" alt="ChromaDB">
                       <span>Chroma</span>
@@ -2090,7 +2382,37 @@
           </div>
         `;
         chatMessages.appendChild(messageDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        if (isUser) {
+          // For user messages, scroll to bottom as usual
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        } else {
+          // For bot messages, scroll to position the user's latest question in the middle
+          scrollToUserQuestionInMiddle();
+        }
+      }
+
+      // Function to scroll so the user's latest question is in the middle of the chat window
+      function scrollToUserQuestionInMiddle() {
+        const userMessages = chatMessages.querySelectorAll('.user-message');
+        if (userMessages.length > 0) {
+          const lastUserMessage = userMessages[userMessages.length - 1];
+          const chatWindowHeight = chatMessages.clientHeight;
+          const messageTop = lastUserMessage.offsetTop;
+          const messageHeight = lastUserMessage.offsetHeight;
+          
+          // Calculate scroll position to center the user's message
+          const targetScrollTop = messageTop - (chatWindowHeight / 2) + (messageHeight / 2);
+          
+          // Ensure we don't scroll beyond the boundaries
+          const maxScrollTop = chatMessages.scrollHeight - chatWindowHeight;
+          const finalScrollTop = Math.max(0, Math.min(targetScrollTop, maxScrollTop));
+          
+          chatMessages.scrollTop = finalScrollTop;
+        } else {
+          // If no user messages, scroll to bottom as fallback
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
       }
 
       // Function to format bot messages with markdown-like syntax
@@ -2159,7 +2481,7 @@
           </div>
         `;
         chatMessages.appendChild(typingIndicator);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+        scrollToUserQuestionInMiddle();
 
         // Send message to API if we have a session (we should already have it from page load)
         if (chatSessionId) {

@@ -879,93 +879,59 @@
         padding: 10px 15px !important;
         min-width: max-content !important;
         animation: marquee 20s linear infinite !important;
-      }
-
-      /* Dynamic animation speeds based on content length for consistent scroll speed */
-      .skill-card[data-skill="programming"] .skill-icons-full {
-        animation: marquee calc(var(--marquee-base-speed) * var(--programming-items) * 2) linear infinite !important;
-      }
-
-      .skill-card[data-skill="tools"] .skill-icons-full {
-        animation: marquee calc(var(--marquee-base-speed) * var(--tools-items) * 2) linear infinite !important;
-      }
-
-      .skill-card[data-skill="cloud"] .skill-icons-full {
-        animation: marquee calc(var(--marquee-base-speed) * var(--cloud-items) * 2) linear infinite !important;
-      }
-
-      .skill-card[data-skill="databases"] .skill-icons-full {
-        animation: marquee calc(var(--marquee-base-speed) * var(--databases-items) * 2) linear infinite !important;
-      }
-
-      /* Skill item styling for horizontal scroll */
-      .skill-item {
-        flex-shrink: 0 !important;
-        min-width: 70px !important;
-        text-align: center !important;
-      }
-
-      .skill-item img {
-        width: 40px !important;
-        height: 40px !important;
-        margin-bottom: 5px !important;
-      }
-
-      .skill-item span {
-        font-size: 0.75rem !important;
-        display: block !important;
-        white-space: nowrap !important;
-      }
-
-      /* Center the skill title */
-      .skill-card .title.is-5 {
-        text-align: center !important;
-        margin-bottom: 0 !important;
-        font-size: 1.1rem !important;
-      }
-
-      /* Ensure proper spacing for skills section on mobile */
-      #skills .section {
-        padding-top: 4rem !important;
-        padding-bottom: 3rem !important;
-      }
-
-      /* Maintain card spacing in mobile */
-      .skill-card {
-        margin-bottom: 1.5rem !important;
-      }
-
-      .skill-card .card-content {
-        padding: 1.5rem !important;
-      }
-
-      /* Make skill cards clickable on mobile */
-      .skill-card {
-        cursor: pointer !important;
-        transition: all 0.2s ease !important;
+        /* Touch scroll enhancements */
+        overflow-x: auto !important;
+        scroll-behavior: smooth !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: thin !important;
+        scrollbar-color: #00d1b2 transparent !important;
         position: relative !important;
+        cursor: grab !important;
+        user-select: none !important;
+        -webkit-user-select: none !important;
+        -moz-user-select: none !important;
+        -ms-user-select: none !important;
       }
 
-      .skill-card:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+      /* Show scrollbar on mobile */
+      .skill-icons-full::-webkit-scrollbar {
+        height: 6px !important;
+        display: block !important;
       }
 
-      .skill-card:active {
-        transform: translateY(0) !important;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+      .skill-icons-full::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.1) !important;
+        border-radius: 3px !important;
       }
 
-      /* Add a subtle tap indicator */
-      .skill-card::after {
-        content: '' !important;
-        position: absolute !important;
-        bottom: 10px !important;
-        right: 15px !important;
-        font-size: 0.7rem !important;
-        color: var(--color-text-light) !important;
-        opacity: 0.6 !important;
-        pointer-events: none !important;
+      .skill-icons-full::-webkit-scrollbar-thumb {
+        background: #00d1b2 !important;
+        border-radius: 3px !important;
+        transition: background 0.3s ease !important;
+      }
+
+      .skill-icons-full::-webkit-scrollbar-thumb:hover {
+        background: #00b89c !important;
+      }
+
+      /* When actively scrolling, pause animation and change cursor */
+      .skill-icons-full.scrolling {
+        animation-play-state: paused !important;
+        cursor: grabbing !important;
+      }
+
+      /* Pause animation on touch/mouse interaction */
+      .skill-icons-full:active,
+      .skill-icons-full:focus {
+        animation-play-state: paused !important;
+      }
+
+      /* Container for skills to ensure proper overflow handling */
+      .skill-card .column.is-8 {
+        width: 100% !important;
+        overflow: visible !important; /* Changed from hidden to visible */
+        padding: 0 !important;
+        position: relative !important;
       }
     }
 
@@ -1823,18 +1789,6 @@
                     </div>
                   </div>
                 </div>
-                <div class="column is-1">
-                  <div class="skill-toggle-container mobile-only">
-                    <button class="button is-small skill-toggle" data-target="databases">
-                      <span class="icon">
-                        <i class="fas fa-chevron-down"></i>
-                      </span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
                 <div class="column is-1">
                   <div class="skill-toggle-container mobile-only">
                     <button class="button is-small skill-toggle" data-target="databases">
@@ -2964,316 +2918,150 @@ I'm also passionate about using my skills to solve real-world problems, as demon
         addMessage(bioText);
       }
 
-      // Event listeners
-      chatButton.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent the document click event from firing
-        toggleChat();
-      });
-      closeChat.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent the document click event from firing
-        toggleChat();
-      });
-      sendButton.addEventListener('click', handleSend);
+      // Enhanced Touch-Scroll Functionality for Skills Section (Mobile Only)
+      function initSkillsTouchScroll() {
+        // Only initialize on mobile/touch devices
+        if (window.innerWidth > 768) return;
 
-      chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-          handleSend();
-        }
-      });
+        const skillContainers = document.querySelectorAll('.skill-icons-full');
+        
+        skillContainers.forEach(container => {
+          let isScrolling = false;
+          let startX = 0;
+          let scrollLeft = 0;
+          let touchStartTime = 0;
+          let animationPaused = false;
 
-      // Close chat when clicking outside
-      document.addEventListener('click', (e) => {
-        if (isChatOpen) {
-          // Check if click is outside the chat window and not on the chat button
-          if (!chatWindow.contains(e.target) && !chatButton.contains(e.target)) {
-            toggleChat();
-          }
-        }
-      });
-
-      // Education section - Courses toggle
-      const coursesToggle = document.getElementById('courses-toggle');
-      const coursesContent = document.getElementById('courses-content');
-      const coursesChevron = document.getElementById('courses-chevron');
-      let coursesExpanded = false;
-
-      if (coursesToggle) {
-        coursesToggle.addEventListener('click', () => {
-          coursesExpanded = !coursesExpanded;
-
-          if (coursesExpanded) {
-            coursesChevron.classList.remove('fa-chevron-right');
-            coursesChevron.classList.add('fa-chevron-down');
-            coursesContent.classList.remove('is-hidden');
-
-            // For two, column layout, we need to ensure we get the right height
-            // First, set visibility to hidden but not display:none to get proper height
-            coursesContent.style.visibility = 'hidden';
-            coursesContent.style.height = 'auto';
-
-            // Now get the height of the content with all items showing
-            const contentHeight = coursesContent.scrollHeight;
-
-            // Reset and start animation
-            coursesContent.style.visibility = '';
-            coursesContent.style.height = '0px';
-
-            // Trigger reflow
-            coursesContent.offsetHeight;
-
-            // Animate to the full height
-            coursesContent.style.height = contentHeight + 'px';
-
-            setTimeout(() => {
-              coursesContent.style.height = 'auto';
-            }, 300);
-          } else {
-            coursesChevron.classList.remove('fa-chevron-down');
-            coursesChevron.classList.add('fa-chevron-right');
-
-            // Animate the content collapse
-            const contentHeight = coursesContent.scrollHeight;
-            coursesContent.style.height = contentHeight + 'px';
-
-            // Trigger reflow
-            coursesContent.offsetHeight;
-
-            setTimeout(() => {
-              coursesContent.style.height = '0px';
+          // Function to pause/resume animation
+          function toggleAnimation(pause) {
+            if (pause && !animationPaused) {
+              container.style.animationPlayState = 'paused';
+              container.classList.add('scrolling');
+              animationPaused = true;
+            } else if (!pause && animationPaused) {
+              // Resume animation after a delay when user stops interacting
               setTimeout(() => {
-                coursesContent.classList.add('is-hidden');
-              }, 300);
-            }, 10);
+                if (!isScrolling) {
+                  container.style.animationPlayState = 'running';
+                  container.classList.remove('scrolling');
+                  animationPaused = false;
+                }
+              }, 2000); // 2 second delay before resuming animation
+            }
           }
-        });
-      }
 
-      // Shared toggle functionality for Experience and Education sections
-      const contentCards = document.querySelectorAll('.content-card');
+          // Touch start event
+          container.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Prevent default scrolling behavior
+            isScrolling = true;
+            touchStartTime = Date.now();
+            startX = e.touches[0].pageX - container.offsetLeft;
+            scrollLeft = container.scrollLeft;
+            toggleAnimation(true);
+          }, { passive: false });
 
-      if (contentCards.length > 0) {
-        contentCards.forEach(card => {
-          const cardId = card.id;
-          const detailsId = `${cardId}-details`;
-          const detailsElement = document.getElementById(detailsId);
-          const toggleElement = card.querySelector('.card-toggle');
-          const toggleIcon = toggleElement.querySelector('.icon');
-          const cardSection = card.dataset.section; // Get section from data attribute
+          // Touch move event
+          container.addEventListener('touchmove', (e) => {
+            if (!isScrolling) return;
+            e.preventDefault();
+            
+            const x = e.touches[0].pageX - container.offsetLeft;
+            const walk = (x - startX) * 2; // Multiply by 2 for faster scroll
+            container.scrollLeft = scrollLeft - walk;
+          }, { passive: false });
 
-          card.addEventListener('click', (e) => {
-            // Don't toggle if clicking on a tag or a link
-            if (e.target.tagName === 'A' || e.target.closest('.tags')) {
+          // Touch end event
+          container.addEventListener('touchend', (e) => {
+            isScrolling = false;
+            const touchDuration = Date.now() - touchStartTime;
+            
+            // If it was a quick tap (less than 200ms), treat as a click
+            if (touchDuration < 200) {
+              // Allow any click events to propagate normally
               return;
             }
+            
+            toggleAnimation(false);
+          });
 
-            const isActive = detailsElement.classList.contains('is-active');
+          // Mouse events for desktop testing (but only on mobile viewport)
+          container.addEventListener('mousedown', (e) => {
+            if (window.innerWidth > 768) return;
+            
+            isScrolling = true;
+            startX = e.pageX - container.offsetLeft;
+            scrollLeft = container.scrollLeft;
+            toggleAnimation(true);
+            e.preventDefault();
+          });
 
-            // Close all other cards in the same section
-            document.querySelectorAll('.card-details').forEach(el => {
-              if (el.id !== detailsId) {
-                el.classList.remove('is-active');
-              }
-            });
+          container.addEventListener('mousemove', (e) => {
+            if (!isScrolling || window.innerWidth > 768) return;
+            e.preventDefault();
+            
+            const x = e.pageX - container.offsetLeft;
+            const walk = (x - startX) * 2;
+            container.scrollLeft = scrollLeft - walk;
+          });
 
-            document.querySelectorAll('.card-toggle').forEach(el => {
-              if (el !== toggleElement) {
-                el.classList.remove('is-active');
-              }
-            });
+          container.addEventListener('mouseup', () => {
+            if (window.innerWidth > 768) return;
+            isScrolling = false;
+            toggleAnimation(false);
+          });
 
-
-            // Toggle this card
-            detailsElement.classList.toggle('is-active');
-            toggleElement.classList.toggle('is-active');
-
-            // Toggle active state on the card itself (fallback for browsers that don't support :has())
-            if (!isActive) {
-              card.classList.add('card-active');
-            } else {
-              card.classList.remove('card-active');
+          // Handle scroll events (for both touch and mouse wheel)
+          container.addEventListener('scroll', () => {
+            if (!animationPaused) {
+              toggleAnimation(true);
             }
           });
-        });
-      }
 
-      // Skills section mobile toggle functionality
-      const skillToggles = document.querySelectorAll('.skill-toggle');
+          // Resume animation when scrolling stops
+          let scrollTimer;
+          container.addEventListener('scroll', () => {
+            clearTimeout(scrollTimer);
+            scrollTimer = setTimeout(() => {
+              if (!isScrolling) {
+                toggleAnimation(false);
+              }
+            }, 150);
+          });
 
-      // Function to check if "More" button should be shown
-      function checkMoreButtonVisibility() {
-        skillToggles.forEach(toggle => {
-          const target = toggle.dataset.target;
-          const skillCard = document.querySelector(`[data-skill="${target}"]`);
-          if (!skillCard) return; // Skip if skill card doesn't exist
-
-          const previewIcons = skillCard.querySelector('.skill-icons-preview');
-          const fullIcons = skillCard.querySelector('.skill-icons-full');
-          const toggleContainer = toggle.closest('.skill-toggle-container');
-
-          if (!previewIcons || !fullIcons || !toggleContainer) return;
-
-          // Count visible skills in preview vs full
-          const previewCount = previewIcons.querySelectorAll('.skill-item').length;
-          const fullCount = fullIcons.querySelectorAll('.skill-item').length;
-
-          // On mobile, show button only if there are more skills in full than preview
-          if (window.innerWidth <= 768) {
-            if (fullCount > previewCount) {
-              toggleContainer.style.display = 'block';
-            } else {
-              toggleContainer.style.display = 'none';
+          // Handle mouse leave to ensure animation resumes
+          container.addEventListener('mouseleave', () => {
+            if (isScrolling) {
+              isScrolling = false;
+              toggleAnimation(false);
             }
-          }
-        });
-      }
+          });
 
-      // Check on load and resize
-      checkMoreButtonVisibility();
-      window.addEventListener('resize', checkMoreButtonVisibility);
-
-      skillToggles.forEach(toggle => {
-        toggle.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const target = toggle.dataset.target;
-          const skillCard = document.querySelector(`[data-skill="${target}"]`);
-          const previewIcons = skillCard.querySelector('.skill-icons-preview');
-          const fullIcons = skillCard.querySelector('.skill-icons-full');
-          const isActive = toggle.classList.contains('is-active');
-
-          if (isActive) {
-            // Collapse
-            toggle.classList.remove('is-active');
-            previewIcons.classList.remove('is-hidden');
-            fullIcons.classList.remove('is-active');
-          } else {
-            // Expand
-            toggle.classList.add('is-active');
-            previewIcons.classList.add('is-hidden');
-            fullIcons.classList.add('is-active');
-          }
-        });
-      });
-
-      // Mobile skills modal functionality
-      const mobileSkillsModal = document.getElementById('mobileSkillsModal');
-      const mobileSkillsClose = document.getElementById('mobileSkillsClose');
-      const mobileSkillsTitle = document.getElementById('mobileSkillsTitle');
-      const mobileSkillsContainer = document.getElementById('mobileSkillsContainer');
-      
-      // Function to open mobile skills modal
-      function openMobileSkillsModal(skillType, skillCard) {
-        // Get the skills data from the preview icons (which contains the unique skills)
-        const previewIcons = skillCard.querySelector('.skill-icons-preview');
-        const skills = previewIcons.querySelectorAll('.skill-item');
-        
-        // Set modal title
-        const skillTitle = skillCard.querySelector('.title.is-5').textContent;
-        mobileSkillsTitle.textContent = skillTitle;
-        
-        // Clear previous content
-        mobileSkillsContainer.innerHTML = '';
-        
-        // Populate skills in static layout
-        skills.forEach(skill => {
-          const skillClone = skill.cloneNode(true);
-          mobileSkillsContainer.appendChild(skillClone);
-        });
-        
-        // Show modal
-        mobileSkillsModal.classList.add('is-active');
-        document.body.style.overflow = 'hidden'; // Prevent background scrolling
-      }
-      
-      // Function to close mobile skills modal
-      function closeMobileSkillsModal() {
-        mobileSkillsModal.classList.remove('is-active');
-        document.body.style.overflow = ''; // Restore scrolling
-      }
-      
-      // Add click event listeners to skill cards on mobile
-      function initMobileSkillsInteraction() {
-        const skillCards = document.querySelectorAll('.skill-card');
-        
-        skillCards.forEach(skillCard => {
-          skillCard.addEventListener('click', (e) => {
-            // Only handle clicks on mobile
+          // Pause animation when container is hovered/focused
+          container.addEventListener('mouseenter', () => {
             if (window.innerWidth <= 768) {
-              // Prevent event if clicking on toggle button
-              if (e.target.closest('.skill-toggle-container')) {
-                return;
-              }
-              
-              const skillType = skillCard.getAttribute('data-skill');
-              openMobileSkillsModal(skillType, skillCard);
+              toggleAnimation(true);
+            }
+          });
+
+          // Resume animation when leaving container
+          container.addEventListener('mouseleave', () => {
+            if (window.innerWidth <= 768) {
+              toggleAnimation(false);
             }
           });
         });
       }
-      
-      // Close modal event listeners
-      mobileSkillsClose.addEventListener('click', closeMobileSkillsModal);
-      
-      // Close modal when clicking outside
-      mobileSkillsModal.addEventListener('click', (e) => {
-        if (e.target === mobileSkillsModal) {
-          closeMobileSkillsModal();
-        }
-      });
-      
-      // Close modal on escape key
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && mobileSkillsModal.classList.contains('is-active')) {
-          closeMobileSkillsModal();
-        }
-      });
-      
-      // Initialize mobile skills interaction
-      initMobileSkillsInteraction();
 
-      // Photo Modal functionality
-      const photoModal = document.getElementById('photoModal');
-      const photoModalImage = document.getElementById('photoModalImage');
-      const photoModalClose = document.getElementById('photoModalClose');
-      const profileImage = document.getElementById('profileImage');
+      // Initialize skills touch scroll
+      initSkillsTouchScroll();
 
-      // Function to open photo modal
-      function openPhotoModal() {
-        photoModalImage.src = 'img/me-big-big.jpg';
-        photoModalImage.alt = 'Manish Kumar - Full Size Profile Photo';
-        photoModal.classList.add('is-active');
-        document.body.style.overflow = 'hidden'; // Prevent background scrolling
-      }
-
-      // Function to close photo modal
-      function closePhotoModal() {
-        photoModal.classList.remove('is-active');
-        document.body.style.overflow = ''; // Restore scrolling
-      }
-
-      // Open modal when profile image is clicked
-      profileImage.addEventListener('click', openPhotoModal);
-
-      // Close modal when close button is clicked
-      photoModalClose.addEventListener('click', closePhotoModal);
-
-      // Close modal when clicking outside the image
-      photoModal.addEventListener('click', (e) => {
-        if (e.target === photoModal) {
-          closePhotoModal();
-        }
-      });
-
-      // Close modal on escape key (extend existing handler)
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && photoModal.classList.contains('is-active')) {
-          closePhotoModal();
-        }
-      });
-
-      // Handle image loading errors
-      photoModalImage.addEventListener('error', function() {
-        console.warn('Full-size profile image not found, using original image');
-        this.src = 'img/me-big.jpg'; // Fallback to the original image
+      // Re-initialize on window resize (for responsive behavior)
+      window.addEventListener('resize', () => {
+        // Debounce the resize event
+        clearTimeout(window.skillsResizeTimeout);
+        window.skillsResizeTimeout = setTimeout(() => {
+          initSkillsTouchScroll();
+        }, 250);
       });
     });
   </script>

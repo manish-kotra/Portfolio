@@ -3278,6 +3278,57 @@ I'm also passionate about using my skills to solve real-world problems, as demon
         console.warn('Full-size profile image not found, using original image');
         this.src = 'img/me-big.jpg'; // Fallback to the original image
       });
+
+      // URL-based project modal opening functionality
+      function handleURLProjectModal() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const projectId = urlParams.get('project');
+        
+        console.log('🔍 Checking URL for project parameter...');
+        console.log('URL:', window.location.href);
+        console.log('Project ID from URL:', projectId);
+        
+        if (projectId) {
+          console.log(`📂 Found project parameter: ${projectId}`);
+          // Add a small delay to ensure page is fully loaded
+          setTimeout(() => {
+            openProjectModal(projectId);
+          }, 100);
+        } else {
+          console.log('ℹ️ No project parameter found in URL');
+        }
+      }
+
+      function openProjectModal(projectId) {
+        const modalId = `project-${projectId}-modal`;
+        const modal = document.getElementById(modalId);
+        
+        if (modal) {
+          document.documentElement.classList.add('is-clipped');
+          modal.classList.add('is-active');
+          
+          // Scroll to projects section first for better UX
+          const projectsSection = document.getElementById('projects');
+          if (projectsSection) {
+            projectsSection.scrollIntoView({ behavior: 'smooth' });
+          }
+          
+          // Update URL without the query parameter to clean it up
+          const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+          window.history.replaceState({}, document.title, newUrl);
+          
+          console.log(`✅ Successfully opened project modal: ${modalId}`);
+        } else {
+          console.warn(`❌ Project modal with ID "${modalId}" not found`);
+          console.log('Available modals:', Array.from(document.querySelectorAll('.modal')).map(m => m.id));
+        }
+      }
+
+      // Check URL parameters on page load
+      handleURLProjectModal();
+
+      // Also check when back/forward navigation happens
+      window.addEventListener('popstate', handleURLProjectModal);
     });
   </script>
 </body>

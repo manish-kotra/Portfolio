@@ -3258,7 +3258,10 @@ I'm also passionate about using my skills to solve real-world problems, as demon
 
       // Close modal when clicking outside the image
       photoModal.addEventListener('click', (e) => {
-        if (e.target === photoModal) {
+        // Close if clicking on the modal background or content area, but not on the image or close button
+        if (e.target === photoModal || 
+            e.target.classList.contains('photo-modal-content') || 
+            (e.target !== photoModalImage && e.target !== photoModalClose && !photoModalClose.contains(e.target))) {
           closePhotoModal();
         }
       });

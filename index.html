@@ -59,6 +59,17 @@
     html {
       scroll-behavior: smooth;
       /* For smooth scrolling when clicking on navigation links */
+      overflow-x: hidden; /* Prevent horizontal scroll */
+    }
+
+    /* Ensure page starts at top on load */
+    html, body {
+      scroll-behavior: auto !important; /* Override smooth scrolling during page load */
+    }
+
+    /* Re-enable smooth scrolling after page load */
+    html.loaded {
+      scroll-behavior: smooth;
     }
 
     /* Use our accent color for links */
@@ -2378,6 +2389,16 @@
   <script src="js/bundle.js"></script>
 
   <script>
+    // Immediate scroll to top - before DOMContentLoaded
+    window.scrollTo(0, 0);
+    
+    // Also handle window load event
+    window.addEventListener('load', () => {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    });
+
     // Function to set theme colors
     function setTheme(theme) {
       const root = document.documentElement;
@@ -2426,6 +2447,21 @@
 
     // Chatbot functionality - placeholder for now
     document.addEventListener('DOMContentLoaded', () => {
+      // Prevent scroll restoration and ensure page starts at top
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+      
+      // Force scroll to top on page load
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+
+      // Re-enable smooth scrolling after ensuring we're at the top
+      setTimeout(() => {
+        document.documentElement.classList.add('loaded');
+      }, 100);
+
       // Mobile hamburger menu toggle
       const navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
       const navbarMenu = document.getElementById('navbarMenu');

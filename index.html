@@ -945,6 +945,26 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
+    /* YouTube video responsive styling */
+    .youtube-video {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 aspect ratio */
+      height: 0;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .youtube-video iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
     @media (max-width: 768px) {
       .video-container {
         margin-bottom: 1rem;
@@ -1906,16 +1926,15 @@
       <section class="modal-card-body">
 
         <div class="video-container">
-          <video 
-            controls 
-            playsinline 
-            preload="metadata" 
-            webkit-playsinline
-            muted
-            class="project-video">
-            <source src="img/RAG/RAG.mp4" type="video/mp4">
-            <p>Your browser does not support the video tag. <a href="img/RAG/RAG.mp4" target="_blank" download>Download video</a> to view it.</p>
-          </video>
+          <div class="youtube-video">
+            <iframe 
+              src="https://www.youtube.com/embed/ILrHJA9GRkU?vq=hd1080&hd=1&rel=0&modestbranding=1" 
+              title="RAG-Powered Web Q&A Bot Demo" 
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+              allowfullscreen>
+            </iframe>
+          </div>
         </div>
 
         <div class="content">

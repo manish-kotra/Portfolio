@@ -1137,9 +1137,9 @@
       <hr />
       <p class="paragraph">Hi! Welcome to my portfolio.</p>
 
-      <p class="paragraph">I’m an AI/ML engineer with 3+ years of experience building scalable ML pipelines and GenAI applications. I hold a Master’s in Robotics & AI from the University of Toronto. My focus is on LLMs, RAG, and agentic AI systems, with a strong interest in computer vision, reinforcement learning, and autonomous intelligence.</p>
+      <!-- <p class="paragraph">I’m an AI/ML engineer with 3+ years of experience building scalable ML pipelines and GenAI applications. I hold a Master’s in Robotics & AI from the University of Toronto. My focus is on LLMs, RAG, and agentic AI systems, with a strong interest in computer vision, reinforcement learning, and autonomous intelligence.</p> -->
 
-        <!-- <p class="paragraph">I’m an AI/ML engineer passionate about building intelligent and scalable AI systems. I've 3
+        <p class="paragraph">I’m an AI/ML engineer passionate about building intelligent and scalable AI systems. I've 3
         years of
         experience developing production-grade ML pipelines and GenAI applications. I completed my Master's at the
         University of Toronto, specializing in Robotics and AI systems. My current interests lie in LLMs and generative
@@ -1148,7 +1148,7 @@
         deeply interested in
         applications of computer vision, reinforcement learning and the broader ecosystem of tools and techniques that
         power intelligent
-        autonomous systems.</p> -->
+        autonomous systems.</p>
 
 
       <!-- 
@@ -1861,7 +1861,7 @@
       <nav class="level">
         <div class="level-item has-text-centered">
           <div>
-            <a href="https://github.com/mmacneil" class="icon is-large">
+            <a href="https://github.com/manish-kotra" class="icon is-large">
               <i class="fab fa-2x fa-github"></i>
             </a>
             <p class="heading"><a href="https://github.com/manish-kotra">github.com/manish-kotra</a></p>
@@ -1906,9 +1906,14 @@
       <section class="modal-card-body">
 
         <div class="video-container">
-          <video controls class="project-video">
+          <video 
+            controls 
+            playsinline 
+            preload="metadata" 
+            webkit-playsinline
+            class="project-video">
             <source src="img/RAG/RAG.mp4" type="video/mp4">
-            Your browser does not support the video tag.
+            <p>Your browser does not support the video tag. <a href="img/RAG/RAG.mp4" target="_blank">Click here to download the video</a>.</p>
           </video>
         </div>
 
@@ -2044,7 +2049,7 @@
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">LLM-Enhanced Algorithmic Trading System</p>
+        <p class="modal-card-title">Algorithmic Trading</p>
         <button class="delete" aria-label="close"></button>
       </header>
       <section class="modal-card-body">
@@ -2356,6 +2361,8 @@
     document.addEventListener('DOMContentLoaded', () => {
       // Mobile hamburger menu toggle
       const navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+      const navbarMenu = document.getElementById('navbarMenu');
+      
       if (navbarBurgers.length > 0) {
         navbarBurgers.forEach(el => {
           el.addEventListener('click', () => {
@@ -2366,6 +2373,22 @@
           });
         });
       }
+
+      // Close hamburger menu when clicking on navigation links
+      const navbarItems = document.querySelectorAll('.navbar-item[href^="#"]');
+      navbarItems.forEach(item => {
+        item.addEventListener('click', () => {
+          // Only close menu if it's currently open (on mobile)
+          if (navbarMenu && navbarMenu.classList.contains('is-active')) {
+            // Find the burger button and remove active class
+            const burger = document.querySelector('.navbar-burger');
+            if (burger) {
+              burger.classList.remove('is-active');
+              navbarMenu.classList.remove('is-active');
+            }
+          }
+        });
+      });
 
       // Active link highlighting and smooth scrolling
       const sections = document.querySelectorAll('section[id]');

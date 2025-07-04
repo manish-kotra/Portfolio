@@ -1130,6 +1130,102 @@
       font-weight: 500;
       color: var(--color-text);
     }
+
+    /* Photo Modal */
+    .photo-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .photo-modal.is-active {
+      display: flex;
+    }
+
+    .photo-modal-content {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .photo-modal img {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .photo-modal-close {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: var(--color-text);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .photo-modal-close:hover {
+      background-color: var(--color-border-lighter);
+      transform: scale(1.1);
+    }
+
+    /* Make profile photo clickable */
+    .profile-photo {
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .profile-photo:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Mobile responsiveness for photo modal */
+    @media (max-width: 768px) {
+      .photo-modal {
+        padding: 10px;
+      }
+
+      .photo-modal img {
+        border-radius: 4px;
+      }
+      
+      .photo-modal-close {
+        top: 15px;
+        right: 15px;
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+        position: fixed;
+        z-index: 10001;
+      }
+    }
   </style>
 </head>
 
@@ -1188,7 +1284,7 @@
         <div class="level">
           <div class="level-item has-text-centered">
             <figure class="image" style="width: 200px; height: 200px;">
-              <img class="is-rounded" src="img/me-big.jpg" style="height: 100%; width: 100%; object-fit: cover;">
+              <img id="profileImage" class="is-rounded profile-photo" src="img/me-big.jpg" style="height: 100%; width: 100%; object-fit: cover;" alt="Manish Kumar Profile Photo">
             </figure>
             <!-- <figure class="image is-128x128">
               <img class="is-rounded" src="img/me-big.jpg">
@@ -1768,6 +1864,16 @@
       <div class="mobile-skills-static" id="mobileSkillsContainer">
         <!-- Skills will be populated here dynamically -->
       </div>
+    </div>
+  </div>
+
+  <!-- Photo Modal -->
+  <div class="photo-modal" id="photoModal">
+    <div class="photo-modal-content">
+      <img id="photoModalImage" src="" alt="Profile Photo">
+      <button class="photo-modal-close" id="photoModalClose" type="button">
+        <i class="fas fa-times"></i>
+      </button>
     </div>
   </div>
 
@@ -3123,6 +3229,52 @@ I'm also passionate about using my skills to solve real-world problems, as demon
       
       // Initialize mobile skills interaction
       initMobileSkillsInteraction();
+
+      // Photo Modal functionality
+      const photoModal = document.getElementById('photoModal');
+      const photoModalImage = document.getElementById('photoModalImage');
+      const photoModalClose = document.getElementById('photoModalClose');
+      const profileImage = document.getElementById('profileImage');
+
+      // Function to open photo modal
+      function openPhotoModal() {
+        photoModalImage.src = 'img/me-big-big.jpg';
+        photoModalImage.alt = 'Manish Kumar - Full Size Profile Photo';
+        photoModal.classList.add('is-active');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+      }
+
+      // Function to close photo modal
+      function closePhotoModal() {
+        photoModal.classList.remove('is-active');
+        document.body.style.overflow = ''; // Restore scrolling
+      }
+
+      // Open modal when profile image is clicked
+      profileImage.addEventListener('click', openPhotoModal);
+
+      // Close modal when close button is clicked
+      photoModalClose.addEventListener('click', closePhotoModal);
+
+      // Close modal when clicking outside the image
+      photoModal.addEventListener('click', (e) => {
+        if (e.target === photoModal) {
+          closePhotoModal();
+        }
+      });
+
+      // Close modal on escape key (extend existing handler)
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && photoModal.classList.contains('is-active')) {
+          closePhotoModal();
+        }
+      });
+
+      // Handle image loading errors
+      photoModalImage.addEventListener('error', function() {
+        console.warn('Full-size profile image not found, using original image');
+        this.src = 'img/me-big.jpg'; // Fallback to the original image
+      });
     });
   </script>
 </body>

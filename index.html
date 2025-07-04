@@ -1137,7 +1137,9 @@
       <hr />
       <p class="paragraph">Hi! Welcome to my portfolio.</p>
 
-      <p class="paragraph">I’m an AI/ML engineer passionate about building intelligent and scalable AI systems. I've 3
+      <p class="paragraph">I’m an AI/ML engineer with 3+ years of experience building scalable ML pipelines and GenAI applications. I hold a Master’s in Robotics & AI from the University of Toronto. My focus is on LLMs, RAG, and agentic AI systems, with a strong interest in computer vision, reinforcement learning, and autonomous intelligence.</p>
+
+        <!-- <p class="paragraph">I’m an AI/ML engineer passionate about building intelligent and scalable AI systems. I've 3
         years of
         experience developing production-grade ML pipelines and GenAI applications. I completed my Master's at the
         University of Toronto, specializing in Robotics and AI systems. My current interests lie in LLMs and generative
@@ -1146,7 +1148,9 @@
         deeply interested in
         applications of computer vision, reinforcement learning and the broader ecosystem of tools and techniques that
         power intelligent
-        autonomous systems.</p>
+        autonomous systems.</p> -->
+
+
       <!-- 
       <p class="paragraph">My current interests lie in LLMs and generative AI, with a strong focus on
         retrieval-augmented generation (RAG), agentic AI systems, and deploying foundation models at scale. I'm also deeply interested in
@@ -2729,13 +2733,29 @@ I'm also passionate about using my skills to solve real-world problems, as demon
       }
 
       // Event listeners
-      chatButton.addEventListener('click', toggleChat);
-      closeChat.addEventListener('click', toggleChat);
+      chatButton.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent the document click event from firing
+        toggleChat();
+      });
+      closeChat.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent the document click event from firing
+        toggleChat();
+      });
       sendButton.addEventListener('click', handleSend);
 
       chatInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
           handleSend();
+        }
+      });
+
+      // Close chat when clicking outside
+      document.addEventListener('click', (e) => {
+        if (isChatOpen) {
+          // Check if click is outside the chat window and not on the chat button
+          if (!chatWindow.contains(e.target) && !chatButton.contains(e.target)) {
+            toggleChat();
+          }
         }
       });
 

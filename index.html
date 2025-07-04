@@ -499,6 +499,54 @@
       transition: max-height 0.5s ease-in, opacity 0.3s 0.2s ease-in;
     }
 
+    /* Mobile-specific card details styling */
+    @media screen and (max-width: 768px) {
+      .card-details.is-active {
+        max-height: none; /* Remove height restriction on mobile */
+        height: auto; /* Allow natural content height */
+      }
+
+      /* Better mobile spacing for card content */
+      .content-card .card-content {
+        padding: 0.75rem 1rem 1.25rem 1rem;
+      }
+
+      /* Ensure tags wrap properly on mobile */
+      .card-details .tags {
+        flex-wrap: wrap;
+        gap: 0.25rem;
+      }
+
+      .card-details .tag {
+        margin-bottom: 0.25rem;
+      }
+
+      /* Add bottom padding to prevent cutoff */
+      .card-details .content {
+        padding-bottom: 1rem;
+      }
+
+      /* Smooth mobile transitions */
+      .card-details {
+        transition: opacity 0.3s ease-out;
+      }
+
+      /* Mobile toggle button positioning */
+      .toggle-container {
+        right: 10px;
+        top: 15px;
+      }
+
+      .card-toggle {
+        width: 24px;
+        height: 24px;
+      }
+
+      .card-toggle .icon {
+        font-size: 0.6rem;
+      }
+    }
+
     /* Style for cards with active details */
     .content-card:has(.card-details.is-active) {
       border-left: 2px solid var(--color-accent);
@@ -519,8 +567,7 @@
     .toggle-container {
       position: absolute;
       right: 15px;
-      top: 50%;
-      transform: translateY(-50%);
+      top: 20px; /* Fixed distance from top of card */
       z-index: 2;
     }
 
@@ -1731,7 +1778,7 @@
                   <p class="title is-4">Tech2U - University of Toronto</p>
                 </div>
               </div>
-              <p class="subtitle is-6">Classroom Ambassador (Data Science) - <time datetime="2024-09">September
+              <p class="subtitle is-6">Classroom Ambassador (Data Science) - <time datetime="2024-09">Sept
                   2024</time> - <time datetime="2025-04">April 2025</time> </p>
               <!-- <p class="job-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.</p> -->
             </div>
@@ -1780,8 +1827,8 @@
                   <p class="title is-4">Artificial Intelligence and Robotics Lab</p>
                 </div>
               </div>
-              <p class="subtitle is-6">Research Assistant - <time datetime="2019-10">October 2019</time> - <time
-                  datetime="2022-10">October 2022</time></p>
+              <p class="subtitle is-6">Research Assistant - <time datetime="2019-10">Oct 2019</time> - <time
+                  datetime="2022-10">Oct 2022</time></p>
               <!-- <p class="job-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.</p> -->
             </div>
           </div>
@@ -1838,7 +1885,7 @@
                   <p class="title is-4">University of Toronto</p>
                 </div>
               </div>
-              <p class="subtitle is-6">Master of Engineering (Robotics) - <time datetime="2023-1">January 2023</time> -
+              <p class="subtitle is-6">Master of Engineering (Robotics) - <time datetime="2023-1">Jan 2023</time> -
                 <time datetime="2025-April">April 2025</time>
               </p>
               <!-- <p>Specializing in artificial intelligence, computer vision, and autonomous systems with emphasis on practical implementations in robotic systems.</p> -->

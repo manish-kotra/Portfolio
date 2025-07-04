@@ -2551,17 +2551,68 @@
     // If you want to set a theme, uncomment and call this:
     // setTheme('default');
 
+    // Function to check URL parameters and open project modal
+    function checkAndOpenProjectModal() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const projectId = urlParams.get('project');
+      
+      if (projectId) {
+        console.log('Project parameter found:', projectId);
+        
+        // Check if the project modal exists
+        const modalId = `project-${projectId}-modal`;
+        const modal = document.getElementById(modalId);
+        
+        if (modal) {
+          console.log('Opening modal:', modalId);
+          
+          // Scroll to projects section first
+          const projectsSection = document.getElementById('projects');
+          if (projectsSection) {
+            projectsSection.scrollIntoView({ behavior: 'smooth' });
+          }
+          
+          // Small delay to allow scroll, then open modal
+          setTimeout(() => {
+            // Add the modal opening classes (similar to how modals are opened)
+            document.documentElement.classList.add('is-clipped');
+            modal.classList.add('is-active');
+            
+            // Clean up URL (remove the project parameter)
+            const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            window.history.replaceState({}, document.title, newUrl);
+          }, 500);
+        } else {
+          console.warn(`Project modal with ID "${modalId}" not found`);
+          // List available modals for debugging
+          const availableModals = document.querySelectorAll('[id$="-modal"]');
+          console.log('Available modals:', Array.from(availableModals).map(m => m.id));
+        }
+      }
+    }
+
+    // Handle browser back/forward navigation
+    window.addEventListener('popstate', () => {
+      checkAndOpenProjectModal();
+    });
+
     // Chatbot functionality - placeholder for now
     document.addEventListener('DOMContentLoaded', () => {
+      // Check for project parameter in URL and open corresponding modal
+      checkAndOpenProjectModal();
+      
       // Prevent scroll restoration and ensure page starts at top
       if ('scrollRestoration' in history) {
         history.scrollRestoration = 'manual';
       }
       
-      // Force scroll to top on page load
-      window.scrollTo(0, 0);
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
+      // Force scroll to top on page load (unless opening a project modal)
+      const urlParams = new URLSearchParams(window.location.search);
+      if (!urlParams.get('project')) {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      }
 
       // Re-enable smooth scrolling after ensuring we're at the top
       setTimeout(() => {
